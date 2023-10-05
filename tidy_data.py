@@ -114,6 +114,6 @@ if __name__ == '__main__':
             # stacking all dataframes
             all_sng_df=pd.concat([all_sng_df, tmp_df])
     # sort by GameID
-    asngsorted_df=all_sng_df.sort_values(by=['GameID'])
+    asngsorted_df=all_sng_df.sort_values(by=['GameID', 'Event', 'Period', 'GameTime'])
     asngsorted_df.to_csv(os.getcwd()+'/tidied_nhl.csv')
 
