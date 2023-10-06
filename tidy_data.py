@@ -21,18 +21,28 @@ def create_event_dataframe(file_path):
     shot_type=[]
     isEmptyNet=[]
     strength=[]
-    home_away=[]
-    # for home_away classification
+    rinkSide=[]
+    season=[]
+    # for rinkSide information classification
     home_team=playByplay['gameData']['teams']['home']['name']
     # Extract relevant information for each event
     for event in playByplay['liveData']['plays']['allPlays']:
         if 'result' in event and 'eventTypeId' in event['result']:
+            season.append(playByplay['gameData']['game']['season'][0:4]+'-'+playByplay['gameData']['game']['season'][4:8])
             # game time not date/time
             game_time.append(event['about']['periodTime'])
             period.append(event['about']['period'])
             game_id_list.append(playByplay['gamePk'])
             team.append(event['team']['name'] if 'team' in event else None)
-            home_away.append('home' if team[-1]==home_team else 'away')
+            home_away='home' if team[-1]==home_team else 'away'
+            if event['about']['period']<5: # no rinkside for shootout
+                # no rinkSide information for some games for example 2018020666 and 2020020177 between 'Vegas Golden Knights' and 'Los Angeles Kings'
+                if 'rinkSide' not in playByplay['liveData']['linescore']['periods'][period[-1]-1][home_away]:
+                    rinkSide.append(None)
+                else:
+                    rinkSide.append(playByplay['liveData']['linescore']['periods'][period[-1]-1][home_away]['rinkSide'] if team[-1]!=None else None)
+            else: 
+                rinkSide.append(None)
             event_type.append(event['result']['eventTypeId'])
             x_coord.append(event['coordinates']['x'] if 'x' in event['coordinates'] else None)
             y_coord.append(event['coordinates']['y'] if 'y' in event['coordinates'] else None)
@@ -62,7 +72,7 @@ def create_event_dataframe(file_path):
                         # Shootout goals are False by default
                         isEmptyNet.append(False)
                     strength.append(event['result']['strength']['name'])
-                else: 
+                else: # if no Goalie for a shot
                     if not any('Goalie' in player['playerType'] for player in players): 
                         goalie.append(None)
                     # to have equal length
@@ -90,7 +100,8 @@ def create_event_dataframe(file_path):
         'ShotType': shot_type,
         'IsEmptyNet': isEmptyNet,
         'Strength': strength,
-        'Home/Away': home_away
+        'RinkSide': rinkSide,
+        'Season': season
     })
     return df
 
@@ -99,8 +110,7 @@ def pivot_for_shots_and_goals(df):
     # extract SHOT and GOAL events
     sng_df=df[df['Event'].isin(['SHOT', 'GOAL'])]
     # pivot the shots and goal(sng) DataFrame
-    chrono_ordered=sng_df.pivot_table(index=['GameID', 'Period', 'GameTime', 'Team', 'Home/Away'], columns='Event', values=['XCoord', 'YCoord', 'Shooter/Scorer', 'Goalie', 'ShotType', 'IsEmptyNet', 'Strength'], aggfunc='first')
-    sng_df=sng_df.pivot_table(index=['GameID', 'Event', 'Period', 'GameTime', 'Team', 'Home/Away'], columns=None, values=['XCoord', 'YCoord', 'Shooter/Scorer', 'Goalie', 'ShotType', 'IsEmptyNet', 'Strength'], aggfunc='first')
+    sng_df=sng_df.pivot_table(index=['GameID', 'Season', 'Event', 'Period', 'GameTime', 'Team'], columns=None, values=['XCoord', 'YCoord', 'Shooter/Scorer', 'Goalie', 'ShotType', 'IsEmptyNet', 'Strength', 'RinkSide'], aggfunc='first')
     return sng_df
 
 
@@ -115,5 +125,6 @@ if __name__ == '__main__':
             all_sng_df=pd.concat([all_sng_df, tmp_df])
     # sort by GameID
     asngsorted_df=all_sng_df.sort_values(by=['GameID', 'Event', 'Period', 'GameTime'])
-    asngsorted_df.to_csv(os.getcwd()+'/tidied_nhl.csv')
+    asngsorted_df.head()
+    asngsorted_df.to_csv(os.getcwd()+'/tidied.csv')
 
