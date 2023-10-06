@@ -2,8 +2,6 @@ import requests
 import numpy as np
 import pandas as pd
 import os
-import ffmpeg
-import subprocess
 import json
 
 
@@ -85,7 +83,7 @@ class NHLDataDownloader:
         Loops through all the games of a given playoff season and creates the appropriate game ID in each loop.
 
         It checks if a game is possible and updates the value accordingly (example: game 8 of matchup 2 in round 1 isn't
-        possible, or game 1 of matchup 10 in round 1 sin't possible, or game 1 of matchup 1 of round 5 also isn't
+        possible, or game 1 of matchup 10 in round 1 isn't possible, or game 1 of matchup 1 of round 5 also isn't
         possible).
         """
         round = 1
@@ -96,6 +94,9 @@ class NHLDataDownloader:
             game_id = f'{self.season}{self.playoffs}0{round}{matchup}{game}'
             downloaded = self.download_nhl_data(game_id)
             game += 1
+
+            # the following 'if' statements make sure that we don't iterate impossible scenarios
+            # (ex: round 5, matchup 10, game 8)
             if game > 7 or not downloaded:
                 matchup += 1
                 game = 1
@@ -126,5 +127,3 @@ if __name__ == '__main__':
         nhl_downloader.season = str(i)
         nhl_downloader.get_nhl_data_season()
         nhl_downloader.get_nhl_data_playoffs()
-
-    # Now you can work with the play-by-play data as needed
