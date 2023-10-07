@@ -125,6 +125,6 @@ if __name__ == '__main__':
             all_sng_df=pd.concat([all_sng_df, tmp_df])
     # sort by GameID
     asngsorted_df=all_sng_df.sort_values(by=['GameID', 'Event', 'Period', 'GameTime'])
-    asngsorted_df.head()
+    asngsorted_df.head(10)
     asngsorted_df.to_csv(os.getcwd()+'/tidied.csv')
 
