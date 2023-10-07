@@ -115,8 +115,8 @@ class NHLDataDownloader:
 
 if __name__ == '__main__':
     # Set the seasons and data directory
-    nhl_season_start = 2016  # USER INPUT HERE FOR START YEAR
-    nhl_season_end = 2020  # USER INPUT HERE FOR END YEAR
+    nhl_season_start = 2016  # USER INPUT HERE FOR STARTING YEAR
+    nhl_season_end = 2020  # USER INPUT HERE FOR ENDING YEAR
     data_directory = 'nhl_data'  # USER INPUT HERE FOR FOLDER WHERE DATA WILL BE SAVED
 
     # Create an instance of NHLPlayByPlayDownloader
