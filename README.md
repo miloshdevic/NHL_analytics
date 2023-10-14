@@ -1,4 +1,4 @@
-# NHL_analytics
+# NHL Analytics
 
 The goal of this repository is to show you how we used NHL stats API to retrieve both aggregate data (player stats for a given season) and “play-by-play” data for a specific time period and to generate plots. We have created some simple visualizations from the aggregate data, and then moved to create interactive visualizations from the play-by-play data. Our work can be found in the form of a simple static web page (blog), which can be found in the following link: (INSERT LINK HERE).
 
