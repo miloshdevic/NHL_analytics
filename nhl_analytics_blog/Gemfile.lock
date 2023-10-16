@@ -69,6 +69,7 @@ GEM
     webrick (1.8.1)
 
 PLATFORMS
+  x86_64-darwin-22
   x86_64-darwin-23
 
 DEPENDENCIES
@@ -81,4 +82,4 @@ DEPENDENCIES
   wdm (~> 0.1.1)
 
 BUNDLED WITH
-   2.4.20
+   2.3.26
