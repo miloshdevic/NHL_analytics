@@ -1,22 +1,23 @@
 ---
 layout: post
-title:  "NHL Data Analysis Milestone 1"
+title:  "NHL Data Analysis Milestone 1 team B-14"
 description: "some Introduction."
 date:  2023-10-15
-feature_image: # maybe?
 tags: [Download data from API, data cleaning]
 ---
 ## Introduction
 
+In this project, we utilized the NHL Stats API to retrieve comprehensive "play-by-play" data for a specific time period. Our primary objective was to generate insightful plots and interactive visualizations that provide users with a deeper understanding of a particular game, various events within the game, shot types, their success rates relative to the distance from the net, and shot rates with respect to distance using heat maps. Furthermore, we aimed to illustrate how frequently a team shoots from specific spots compared to the NHL average team in the same season using a shot map. In addition to gathering and preprocessing the data, using tools for data retrieval and manipulation, we engaged in in-depth discussions about the various plots and interactive visualizations we created. All these visual representations will be showcased on a static web page using Jekyll.
+
 ## 1. Data Acquisition
 
-# How to Download NHL Play-by-Play Data
+### How to Download NHL Play-by-Play Data
 
 If you are looking to download NHL but don’t know how, here is a quick tutorial on how to do it! We will walk you step by step through the process by using the Python code provided.
 
 <!--more-->
 
-# 1.1 Requirements
+### 1.1 Requirements
 
 Before you start, make sure you have the following:
 
@@ -24,13 +25,13 @@ Before you start, make sure you have the following:
 2.	The required Python libraries installed (they can be found in the file "requirements.txt") for the virtual environment.
 3.	Access to the internet to download the NHL data from the API.
 
-# Step 1: Setting Up the Environment
+### Step 1: Setting Up the Environment
 
 Start by importing the necessary libraries and creating a class that will help us download the data. In the provided code, the ‘NHLDataDownloader’ class handles the data download process.
 
 {% include image_full.html imageurl="/images/download_step1.png" caption="setting up the environment" %}
 
-# Step 2: Create an Instance of the Downloader
+### Step 2: Create an Instance of the Downloader
 
 Now, create an instance of the ‘NHLDataDownloader’ class. All you need to do is to specify the starting and ending season where it is indicated in our code. You only need to put the first year of a given season (e.g., put 2016 if you want the 2016-17 season, or 2020 if you want the 2020-21 season). It will download the data for all the regular season games and playoff games for the selected interval (inclusively). You also need to also specify the path of the folder where the downloaded data will be stored. 
 
@@ -38,7 +39,7 @@ Here is an example:
 
 {% include image_full.html imageurl="/images/download_step2.png" %}
 
-# Step 3: Download the Data
+### Step 3: Download the Data
 
 Now, it’s time to download the NHL play-by-play data for the specified seasons. The code provided does this in two steps:
 * First, it downloads the data for the regular season games using the ‘get_nhl_data_season’ method.
@@ -50,15 +51,15 @@ The downloader will ensure that it skips games that didn’t take place, such as
 
 {% include image_full.html imageurl="/images/download_step3.png" %}
 
-# Conclusion
+### Conclusion
 You now have the guide to download the NHL play-by-play data using the provided Python code. Simply replace the starting and ending years as well as the data directory with your preferences and you are good to go! Good Luck!
 
 
 
 ## 2. Interactive Debugging Tool
 
-# The guide on what the interactive debugging tool is for and how to use this tool.
-# Question 1
+### The guide on what the interactive debugging tool is for and how to use this tool.
+### Question 1
 The code is included in the interactive_debug.ipynb in the NHL_analytics repository. Here the interactive debugging tool allows the user to to flip through all of the events, for
 every game of a given season, with the ability to switch between the regular
 season and playoffs. WIth the inputs (game ID and event ID) entered by the user, the description of the game will be printed. The description compares the goals, shots on goals, and so on of the home team and away team. Then a rink figure with the description of the event is shown. THe blue point represents the location of the event. Lastly, a detailed description of the event is printed, including the time, location, players’ names, result, and so on.
@@ -70,13 +71,12 @@ As you can see in our example, after the user inputs (game ID and event ID) are 
 
 ## 4. Tidy Data
 
-# Question 1
+### Question 1
 
 {% include image_full.html imageurl="/images/tidy.png" caption="head of tidied dataframe" %}
 
 
-
-# Question 2
+### Question 2
 
 We would need a “Penalty” feature plus the name of the team that got penalized and the name of the team that got the advantage.
 Then we go row by row to label shot events of the team that has the advantage to ‘power play’ or ‘5 on 4’, until we run into 1 of the 3 possibilities:
@@ -88,7 +88,7 @@ Then we go row by row to label shot events of the team that has the advantage to
 
 
 
-# Question 3
+### Question 3
 
 1. For rebound shots: A rebound is any attempt made within 3 seconds of another blocked, missed or saved shot attempt without a stoppage in play in between.
 
@@ -103,7 +103,7 @@ Then we go row by row to label shot events of the team that has the advantage to
 
 ## 5. Simple Visualizations
 
-# Question 1: Figure Analysis: Shot Types and Their Impact
+### Question 1: Figure Analysis: Shot Types and Their Impact
 
 In our analysis of the different shot types and their impact on the game, we examined the data from a selected NHL season (in our case, the 2016-17 season) to gain insights into which shot is the most dangerous and which one is the most common. We plotted a stacked bar graph that overlays the number of goals over the number of shots for each shot type.
 
@@ -113,7 +113,7 @@ We chose to plot a stacked bar graph because we believe it is the best way to vi
 
 {% include image_full.html imageurl="/images/shot_types_2016-17.png" %}
 
-# Question 2: Figure Analysis: Shot Distance vs Goal Probability
+### Question 2: Figure Analysis: Shot Distance vs Goal Probability
 
 In our analysis of the distance from which a shot is taken and the probability it is a goal, we visually represented that data for the 2018-19 to 2020-21 NHL seasons. We created one line plot for each season to understand the relation between the distance of a shot and its probability of being a goal. We have also plotted one graph with all the line plots of each season to facilitate an easier comparison between these three seasons.
 
@@ -134,7 +134,7 @@ We chose this type of figure because these plots allow us to analyze the probabi
 
 
 
-# Question 3: Figure Analysis: Percentage of Goals per Shots by Distance Category and Shot Type
+### Question 3: Figure Analysis: Percentage of Goals per Shots by Distance Category and Shot Type
 
 By looking at our heatmap, we can say that the deflected shot might be one of the most dangerous shots as it has one of the highest percentage of goals per shot for short distances (between 0-10 ft). It has a nearly 70% success rate for deflections that happened between 0 and 5 ft from the net. This can be explained by the following: a deflection happens when a player changes the direction of a shot (whether it is intentional or not) as the puck is being shot at the net at a very high speed. The goaltender sees the shot and expects it to go in some direction and then at the last minute it changes due to a deflection and if it is close enough it doesn’t give him the chance to readjust.
 
@@ -151,30 +151,23 @@ It is worth noting that for all the shot types, the closer they are to the net, 
 
 
 
-# Question 1
+### Question 1
 
 Here are the interactive shot maps for the NHL teams for 5 different seasons. At the beginning, all the teams' shot maps are displayed together. Once you select a team, only their shot map will be displayed.
 
 
+[2016-2017 Season NHL shot maps]({% link shotMaps/2016-2017_season_nhl_shot_map.html %}){:target="_blank"}
 
-{% include 2016-2017_season_nhl_shot_map.html %}
+[2017-2018 Season NHL shot maps]({% link shotMaps/2017-2018_season_nhl_shot_map.html %}){:target="_blank"}
 
+[2018-2019 Season NHL shot maps]({% link shotMaps/2018-2019_season_nhl_shot_map.html %}){:target="_blank"}
 
-{% include 2017-2018_season_nhl_shot_map.html %}
+[2019-2020 Season NHL shot maps]({% link shotMaps/2019-2020_season_nhl_shot_map.html %}){:target="_blank"}
 
-
-{% include 2018-2019_season_nhl_shot_map.html %}
-
-
-{% include 2019-2020_season_nhl_shot_map.html %}
+[2020-2021 Season NHL shot maps]({% link shotMaps/2020-2021_season_nhl_shot_map.html %}){:target="_blank"}
 
 
-{% include 2020-2021_season_nhl_shot_map.html %}
-
-
-
-
-# Question 2
+### Question 2
 
 With these plots, we can get an idea of how effective a team’s offense is. The plots show us for each location of the offensive zone how much a team shoots compared to the average of the league. If it is red, they shoot above the average (the darker the higher) and if it is blue they shoot below the average (the darker the lower). 
 
@@ -183,7 +176,7 @@ From looking at these plots, we can determine if a team’s offense can dominate
 
 
 
-# Question 3
+### Question 3
 
 We can see in the shot map of the Colorado Avalanche from the 2016-2017 season that in most parts of the offensive zone, they shoot way less than the average NHL teams do, especially near the goal crease, where they are way below the average. 
 
@@ -206,7 +199,7 @@ We can conclude that the amount of shots and the location of the shots are a big
 
 
 
-# Question 4
+### Question 4
 
 We can see for the Tampa Bay Lightning that in all 3 seasons, they have been dominating the league in terms of shots taken in the middle of the offensive zone. This shows they’re capable of controlling the offensive play and setting up their attack properly in order to shoot from the most dangerous areas of the ice. This obviously contributed to their success in recent years. 
 
@@ -228,8 +221,14 @@ These graphs obviously don’t paint a complete picture because many other aspec
 
 
 
+created using [Jekyll](https://jekyllrb.com/)
 
-created using [Jekyll](https://jekyllrb.com/) and [Just the Docs][jekyll-docs] or [Better GitHub][jekyll-gh]
+Just the [Docs][jekyll-docs] or Better [GitHub][jekyll-gh]
 
 [jekyll-docs]: https://jekyllrb.com/docs/home
 [jekyll-gh]:   https://github.com/jekyll/jekyll
+[2016-2017]: "/_includes/2016-2017_season_nhl_shot_map.html"
+[2017-2018]: "/_includes/2017-2018_season_nhl_shot_map.html"
+[2018-2019]: "/_includes/2018-2019_season_nhl_shot_map.html"
+[2019-2020]: "/_includes/2019-2020_season_nhl_shot_map.html"
+[2020-2021]: "/_includes/2020-2021_season_nhl_shot_map.html"
