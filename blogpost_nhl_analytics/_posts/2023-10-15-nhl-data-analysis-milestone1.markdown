@@ -220,6 +220,18 @@ On the other hand, we can see that the Buffalo Sabres have been struggling to sh
 These graphs obviously don’t paint a complete picture because many other aspects need to be considered when trying to explain a team’s success or struggle, one of them being the amount of shots allowed compared to the league’s average (indeed, scoring many goals doesn’t mean much if on the other end they concede goals as easily). However, this still gives us a good picture of how well the offense performs.
 
 
+authors:
+  
+name:              Kaiqi Cheng (20272810)
+email:             kaiqi.cheng@umontreal.ca
+
+name:              Milosh Devic (20158232)
+email:             milosh.devic@umontreal.ca
+
+name:              Yonglin Zhu (20257137)
+email:             yonglin.zhu@umontreal.ca
+
+
 
 created using [Jekyll](https://jekyllrb.com/)
 
