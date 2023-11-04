@@ -2,13 +2,14 @@ import pandas as pd
 import numpy as np
 import json
 import os as os
+from datetime import datetime, time, date
 
 
 def create_event_dataframe(file_path):
     # Load .json File
     with open(file_path, 'r') as file:
         playByplay = json.load(file)
-    print(playByplay['gamePk'])
+    # print(playByplay['gamePk'])
     # Initialize lists to store information
     game_time = []
     period = []
@@ -120,7 +121,8 @@ def create_event_dataframe(file_path):
 
 def pivot_for_shots_and_goals(df):
     # extract SHOT and GOAL events
-    sng_df = df[df['Event'].isin(['SHOT', 'GOAL'])]
+    sng_df = df[df['Event'].isin(['SHOT', 'GOAL', 'FACEOFF', 'HIT', 'GIVEAWAY', 'MISSED_SHOT',
+                                  'BLOCKED_SHOT', 'PENALTY', 'TAKEAWAY', 'PENALTY', 'FIGHT'])]
     # pivot the shots and goal(sng) DataFrame
     sng_df = sng_df.pivot_table(index=['GameID', 'Season', 'Event', 'Period', 'GameTime', 'Team'], columns=None,
                                 values=['XCoord', 'YCoord', 'Shooter', 'Goalie', 'ShotType', 'isGoal', 'isEmptyNet',
@@ -137,20 +139,24 @@ def add_distance(df: pd.DataFrame) -> pd.DataFrame:
 
     i = 0
     for j, row in df.iterrows():
-        if row['RinkSide'] == 'right':
-            distance_to_goal[i] = np.sqrt(
-                (row['XCoord'] - left_goal[0]) ** 2 + (row['YCoord'] - left_goal[1]) ** 2).round()
+        if row['Event'] in ['GOAL', 'SHOT']:
+            if row['RinkSide'] == 'right':
+                distance_to_goal[i] = np.sqrt(
+                    (row['XCoord'] - left_goal[0]) ** 2 + (row['YCoord'] - left_goal[1]) ** 2).round()
 
-        elif row['RinkSide'] == 'left':
-            distance_to_goal[i] = np.sqrt(
-                (row['XCoord'] - right_goal[0]) ** 2 + (row['YCoord'] - right_goal[1]) ** 2).round()
+            elif row['RinkSide'] == 'left':
+                distance_to_goal[i] = np.sqrt(
+                    (row['XCoord'] - right_goal[0]) ** 2 + (row['YCoord'] - right_goal[1]) ** 2).round()
 
+            else:
+                distance_to_goal[
+                    i] = None  # some games didn't have the information for which side the team was defending
         else:
-            distance_to_goal[i] = None  # some games didn't have the information for which side the team was defending
-        i+=1
+            distance_to_goal[i] = None
+        i += 1
 
     # add the column with its values
-    df['distance_to_goal'] = distance_to_goal
+    df['DistanceToGoal'] = distance_to_goal
     return df
 
 
@@ -163,26 +169,153 @@ def add_angle(df: pd.DataFrame) -> pd.DataFrame:
 
     i = 0
     for j, row in df.iterrows():
-        if row['RinkSide'] == 'right':
-            # if (left_goal[0] - row['XCoord']) != 0:
-            if row['YCoord'] != 0:
-                shooting_angle[i] = (np.arctan((left_goal[0] - row['XCoord']) / row['YCoord']) * (180 / np.pi)).round()
-            else:
-                shooting_angle[i] = 0
+        if row['Event'] in ['GOAL', 'SHOT']:
+            if row['RinkSide'] == 'right':
+                # if (left_goal[0] - row['XCoord']) != 0:
+                if row['YCoord'] != 0:
+                    shooting_angle[i] = (
+                            np.arctan((left_goal[0] - row['XCoord']) / row['YCoord']) * (180 / np.pi)).round()
+                else:
+                    shooting_angle[i] = 0
 
-        elif row['RinkSide'] == 'left':
-            # if (-right_goal[0] - row['XCoord']) != 0:
-            if row['YCoord'] != 0:
-                shooting_angle[i] = (np.arctan((right_goal[0] - row['XCoord']) / row['YCoord']) * (180 / np.pi)).round()
-            else:
-                shooting_angle[i] = 0
+            elif row['RinkSide'] == 'left':
+                # if (-right_goal[0] - row['XCoord']) != 0:
+                if row['YCoord'] != 0:
+                    shooting_angle[i] = (
+                            np.arctan((right_goal[0] - row['XCoord']) / row['YCoord']) * (180 / np.pi)).round()
+                else:
+                    shooting_angle[i] = 0
 
+            else:
+                shooting_angle[i] = None  # some games didn't have the information for which side the team was defending
         else:
-            shooting_angle[i] = None  # some games didn't have the information for which side the team was defending
-        i +=1
+            shooting_angle[i] = None
+        i += 1
 
     # add the column with its values
-    df['shooting_angle'] = shooting_angle
+    df['ShootingAngle'] = shooting_angle
+    return df
+
+
+def add_previous_events(df: pd.DataFrame) -> pd.DataFrame:
+    last_event = np.full((df.shape[0]), None)
+    last_event_XCoord = np.zeros(df.shape[0])
+    last_event_YCoord = np.zeros(df.shape[0])
+    time_last_event = np.zeros(df.shape[0])
+    distance_last_event = np.zeros(df.shape[0])
+
+    last_event[0] = None
+    last_event_XCoord[0] = None
+    last_event_YCoord[0] = None
+    time_last_event[0] = None
+    distance_last_event[0] = None
+
+    previous_row = None
+    i = 0
+    for j, row in df.iterrows():
+        if i == 0:
+            previous_row = row
+            i += 1
+            continue
+
+        if row['GameID'] != previous_row['GameID']:
+            last_event[i] = None
+            last_event_XCoord[i] = None
+            last_event_YCoord[i] = None
+            time_last_event[i] = None
+            distance_last_event[i] = None
+            previous_row = row
+            i += 1
+            continue
+
+        # update new columns
+        last_event[i] = previous_row['Event']
+        last_event_XCoord[i] = previous_row['XCoord']
+        last_event_YCoord[i] = previous_row['YCoord']
+        distance_last_event[i] = np.sqrt(
+            (row['XCoord'] - previous_row['XCoord']) ** 2 + (row['YCoord'] - previous_row['YCoord']) ** 2).round()
+
+        if previous_row['Period'] == row['Period']:
+            time_last_event[i] = (datetime.combine(date.today(), row['GameTime']) -
+                                  datetime.combine(date.today(), previous_row['GameTime'])).total_seconds()
+        else:
+            time_end_period = (datetime.combine(date.today(), time(0, 20, 0)) -
+                               datetime.combine(date.today(), previous_row['GameTime'])).total_seconds()
+            time_start_period = (datetime.combine(date.today(), previous_row['GameTime']) -
+                                 datetime.combine(date.today(), time(0, 0, 0))).total_seconds()
+            time_last_event[i] = time_end_period + time_start_period
+
+        previous_row = row
+        i += 1
+
+    df['LastEvent'] = last_event
+    df['LastEvent_XCoord'] = last_event_XCoord
+    df['LastEvent_YCoord'] = last_event_YCoord
+    df['TimeLastEvent'] = time_last_event
+    df['DistanceLastEvent'] = distance_last_event
+    return df
+
+
+def add_rebound(df) -> pd.DataFrame:
+    rebound = np.full((df.shape[0]), False)
+
+    previous_row = None
+    i = 0
+    for j, row in df.iterrows():
+        if i == 0:
+            previous_row = row
+            i += 1
+            continue
+
+        if row['Event'] == 'SHOT' and previous_row['Event'] == 'SHOT':
+            rebound[i] = True
+
+        previous_row = row
+        i += 1
+
+    df['Rebound'] = rebound
+    return df
+
+
+def angle_change(df) -> pd.DataFrame:
+    angle_diff = np.zeros(df.shape[0])
+
+    previous_row = None
+    i = 0
+    for j, row in df.iterrows():
+        if i == 0:
+            previous_row = row
+            i += 1
+            continue
+
+        if row['Rebound']:
+            if (row['ShootingAngle'] < 0 and previous_row['ShootingAngle'] > 0) or (
+                    row['ShootingAngle'] > 0 and previous_row['ShootingAngle'] < 0):
+                angle_diff[i] = np.abs(row['ShootingAngle']) + np.abs(previous_row['ShootingAngle'])
+            else:
+                angle_diff[i] = np.abs(row['ShootingAngle'] - previous_row['ShootingAngle'])
+
+        previous_row = row
+        i += 1
+
+    df['AngleChange'] = angle_diff
+    return df
+
+
+def add_speed(df) -> pd.DataFrame:
+    speed = np.zeros(df.shape[0])
+
+    i = 0
+    for j, row in df.iterrows():
+        if i == 0:
+            i += 1
+            continue
+
+        if row['TimeLastEvent'] != 0:
+            speed[i] = row['DistanceLastEvent'] / row['TimeLastEvent']
+        i += 1
+
+    df['Speed'] = speed
     return df
 
 
@@ -193,15 +326,17 @@ def run_tidy_data(folder):
         if file.endswith('.json'):
             # get all events, then pivot for shots and goals
             tmp_df = pivot_for_shots_and_goals(create_event_dataframe(f'{folder}/{file}'))
+            # tmp_df = create_event_dataframe(f'{folder}/{file}')
 
             # stacking all dataframes
             all_sng_df = pd.concat([all_sng_df, tmp_df])
 
+
     # sort by GameID
-    asngsorted_df = all_sng_df.sort_values(by=['GameID', 'Event', 'Period', 'GameTime'])
-    asngsorted_df = add_distance(asngsorted_df)
-    asngsorted_df = add_angle(asngsorted_df)
+    asngsorted_df = all_sng_df.sort_values(by=['GameID', 'Period', 'GameTime'])
+    asngsorted_df.reset_index()
     asngsorted_df.to_csv(f'{folder}.csv')
+    # asngsorted_df['GameTime'] = asngsorted_df['GameTime'].apply(lambda x: datetime.strptime(x, '%M:%S').time())
 
 
 if __name__ == '__main__':
