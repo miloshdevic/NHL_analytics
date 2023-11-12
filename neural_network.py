@@ -6,16 +6,14 @@ from sklearn.metrics import classification_report, confusion_matrix, roc_curve, 
 from sklearn.model_selection import train_test_split
 from tensorflow import keras
 from tensorflow.keras import layers
+from utils.model_utils import *
 
-from nn_preprocessing import *
 
+def train(X_training, y_training, X_validation, y_validation):
 
-def train_nn(X_training, y_training, X_validation, y_validation):
-
-    # Build the neural network model
+    # Build the neural network model with one hidden layer
     model = keras.Sequential([
         layers.Input(shape=(X_training.shape[1],)),
-        # layers.Dense(32, activation='relu'),
         layers.Dense(16, activation='relu'),
         layers.Dense(1, activation='sigmoid')
     ])
@@ -23,16 +21,17 @@ def train_nn(X_training, y_training, X_validation, y_validation):
     # get summary of model
     model.summary()
 
-    opt = SGD(learning_rate=0.01)
+    # stochastic gradient descent optimizer
+    opt = SGD(learning_rate=0.0001)
 
     # Compile the model
-    model.compile(optimizer="adam", loss='binary_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer=opt, loss='binary_crossentropy', metrics=['accuracy'])
 
     # Early Stopping
     callback = tf.keras.callbacks.EarlyStopping(
         monitor="val_accuracy",
         min_delta=0.001,
-        patience=20,
+        patience=10,
         verbose=1,
         mode="auto",
         baseline=None,
@@ -41,7 +40,7 @@ def train_nn(X_training, y_training, X_validation, y_validation):
     )
 
     # Train the model
-    history = model.fit(X_training, y_training, epochs=100, batch_size=32, validation_data=(X_validation, y_validation), callbacks=callback,
+    history = model.fit(X_training, y_training, epochs=50, batch_size=32, validation_data=(X_validation, y_validation), callbacks=callback,
                         verbose=True)
 
     return model, history
@@ -94,7 +93,7 @@ if __name__ == '__main__':
     df = pd.read_csv('advanced_models_data.csv')
 
     # Preprocess data
-    X_res_scaled, y_res = preprocess(df)
+    X_res_scaled, y_res = preprocess_neural_network(df)
 
     # Split the data into training, validation and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X_res_scaled, y_res, test_size=0.2, shuffle=True)
@@ -102,10 +101,10 @@ if __name__ == '__main__':
     X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.25, shuffle=True)  # 0.25 x 0.8 = 0.2
 
     # train model
-    nn_model, model_history = train_nn(X_train, y_train, X_val, y_val)
+    nn_model, model_history = train(X_train, y_train, X_val, y_val)
 
     # save model
-    nn_model.save("models/neural_network_all_ft.keras")
+    nn_model.save("models/neural_network.keras")
 
     # plot metric figures
     plot_figures(nn_model, model_history, X_test, y_test)
