@@ -2,6 +2,8 @@ import pandas as pd
 import tensorflow as tf
 from tensorflow import keras
 from comet_ml import API
+from comet_ml.integration.sklearn import load_model
+import category_encoders as ce
 from utils.model_utils import *
 
 
@@ -27,8 +29,19 @@ def predict_logreg(df):
 def predict_xgboost(df):
     df = df.copy()
 
-    # TODO: complete this function to test the XGBoost models
-    pass
+    # preprocess the test dataset
+    X_test = df.drop('isGoal', axis=1)
+    y_test = df['isGoal']
+    onehot_E = pd.get_dummies(X_test['ShotType'], prefix='ShotType')
+    X_test = X_test.drop('ShotType', axis=1)
+    X_test = pd.concat([X_test, onehot_E], axis=1)
+    weight= len(y_test[y_test == 1])/len(y_test)
+
+    # Load the model from Comet Registry
+    xgb_model = load_model("registry://nhl-analytics-milestone-2/xgboost_1st:1.2.0")
+
+    prediction = xgb_model.predict(X_test)
+    return xgb_model, prediction
 
 
 def predict_decision_tree(df):
