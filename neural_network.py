@@ -40,8 +40,8 @@ def train(X_training, y_training, X_validation, y_validation):
     )
 
     # Train the model
-    history = model.fit(X_training, y_training, epochs=50, batch_size=32, validation_data=(X_validation, y_validation), callbacks=callback,
-                        verbose=True)
+    history = model.fit(X_training, y_training, epochs=50, batch_size=32, validation_data=(X_validation, y_validation),
+                        callbacks=callback, verbose=True)
 
     return model, history
 
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     df = pd.read_csv('advanced_models_data.csv')
 
     # Preprocess data
-    X_res_scaled, y_res = preprocess_neural_network(df)
+    X_res_scaled, y_res = preprocess_neural_network_rfc(df)
 
     # Split the data into training, validation and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X_res_scaled, y_res, test_size=0.2, shuffle=True)
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     nn_model, model_history = train(X_train, y_train, X_val, y_val)
 
     # save model
-    nn_model.save("models/neural_network.keras")
+    nn_model.save("models/neural_network_rfc.keras")
 
     # plot metric figures
     plot_figures(nn_model, model_history, X_test, y_test)
