@@ -234,16 +234,17 @@ def add_previous_events(df: pd.DataFrame) -> pd.DataFrame:
         last_event_YCoord[i] = previous_row['YCoord']
         distance_last_event[i] = np.sqrt(
             (row['XCoord'] - previous_row['XCoord']) ** 2 + (row['YCoord'] - previous_row['YCoord']) ** 2).round()
+        time_last_event[i] = row['GameTime'] - previous_row['GameTime']
 
-        if previous_row['Period'] == row['Period']:
-            time_last_event[i] = (datetime.combine(date.today(), row['GameTime']) -
-                                  datetime.combine(date.today(), previous_row['GameTime'])).total_seconds()
-        else:
-            time_end_period = (datetime.combine(date.today(), time(0, 20, 0)) -
-                               datetime.combine(date.today(), previous_row['GameTime'])).total_seconds()
-            time_start_period = (datetime.combine(date.today(), previous_row['GameTime']) -
-                                 datetime.combine(date.today(), time(0, 0, 0))).total_seconds()
-            time_last_event[i] = time_end_period + time_start_period
+        # if previous_row['Period'] == row['Period']:
+        #     time_last_event[i] = (datetime.combine(date.today(), row['GameTime']) -
+        #                           datetime.combine(date.today(), previous_row['GameTime'])).total_seconds()
+        # else:
+        #     time_end_period = (datetime.combine(date.today(), time(0, 20, 0)) -
+        #                        datetime.combine(date.today(), previous_row['GameTime'])).total_seconds()
+        #     time_start_period = (datetime.combine(date.today(), previous_row['GameTime']) -
+        #                          datetime.combine(date.today(), time(0, 0, 0))).total_seconds()
+        #     time_last_event[i] = time_end_period + time_start_period
 
         previous_row = row
         i += 1
@@ -316,6 +317,52 @@ def add_speed(df) -> pd.DataFrame:
         i += 1
 
     df['Speed'] = speed
+    return df
+
+
+def add_game_seconds(df):
+    # transform data type into a datetime.time object
+    df['GameTime'] = df['GameTime'].apply(lambda x: datetime.strptime(x, '%M:%S').time())
+
+    seconds = np.zeros(df.shape[0])
+    previous_row = None
+
+    i = 0
+    for j, row in df.iterrows():
+        if i == 0:
+            seconds[i] = 0
+            previous_row = row
+            i += 1
+            continue
+
+        if row['GameID'] != previous_row['GameID']:
+            seconds[i] = 0
+            previous_row = row
+            i += 1
+            continue
+
+        if row['Period'] == 1:
+            seconds[i] = (datetime.combine(date.today(), row['GameTime']) -
+                          datetime.combine(date.today(), time(0, 0, 0))).total_seconds()
+
+        elif row['Period'] == 2:
+            time1 = (datetime.combine(date.today(), row['GameTime']) -
+                     datetime.combine(date.today(), time(0, 0, 0))).total_seconds()
+            time2 = (datetime.combine(date.today(), time(0, 20, 0)) -
+                     datetime.combine(date.today(), time(0, 0, 0))).total_seconds()
+            seconds[i] = time1 + time2
+
+        elif row['Period'] == 3:
+            time1 = (datetime.combine(date.today(), row['GameTime']) -
+                     datetime.combine(date.today(), time(0, 0, 0))).total_seconds()
+            time2 = (datetime.combine(date.today(), time(0, 40, 0)) -
+                     datetime.combine(date.today(), time(0, 0, 0))).total_seconds()
+            seconds[i] = time1 + time2
+
+        previous_row = row
+        i += 1
+
+    df['GameTime'] = seconds
     return df
 
 

@@ -73,7 +73,7 @@ def preprocess_neural_network_all_ft(df: pd.DataFrame):
 
     y = data['isGoal'].to_numpy()
 
-    data = data.drop(['Unnamed: 0', 'isGoal', 'GameTime'], axis=1)
+    data = data.drop(['isGoal', 'GameID'], axis=1)
 
     # Make all non-numerical values numerical
     data['Rebound'] = data['Rebound'].astype(int)
@@ -103,7 +103,7 @@ def preprocess_neural_network_all_ft(df: pd.DataFrame):
     # X = scaler.fit_transform(X)  # Standardize the features
 
     # Create a ColumnTransformer that applies the StandardScaler to the specified columns
-    columns_to_scale = ['DistanceToGoal', 'ShootingAngle', 'Speed', 'TimeLastEvent', 'DistanceLastEvent']
+    columns_to_scale = ['DistanceToGoal', 'ShootingAngle', 'Speed', 'TimeLastEvent', 'DistanceLastEvent', 'GameTime']
     preprocessor = ColumnTransformer(
         transformers=[
             (
