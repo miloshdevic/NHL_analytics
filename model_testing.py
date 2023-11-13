@@ -39,18 +39,17 @@ def predict_logreg(df):
 def predict_xgboost(df):
     df = df.copy()
 
-    # preprocess the test dataset
-    X_test = df.drop('isGoal', axis=1)
-    y_test = df['isGoal']
-    onehot_E = pd.get_dummies(X_test['ShotType'], prefix='ShotType')
-    X_test = X_test.drop('ShotType', axis=1)
-    X_test = pd.concat([X_test, onehot_E], axis=1)
-    weight = len(y_test[y_test == 1])/len(y_test)
-
     # Load the model from Comet Registry
-    # TODO: this doesn't work
-    xgb_model = load_model("registry://nhl-analytics-milestone-2/xgboost_1st:1.2.0")
+    xgb_model = pickle.load(open("comet_models/xgboost_3rd.pkl", "rb"))
 
+    ## preprocess the test dataset
+    # dropna
+    df.dropna(inplace=True)
+    # selecting the same features as in the training dataset
+    X_test = df[['DistanceLastEvent','TimeLastEvent','LastEvent_XCoord','isEmptyNet','LastEvent_YCoord', 'DistanceToGoal']]
+    y_test = df['isGoal']
+    
+    # predictions
     prediction = xgb_model.predict(X_test)
     return prediction, y_test
 
