@@ -1,7 +1,7 @@
 # Setup
-title:               NHL data analysis Milestone 1 team B-14
+title:               IFT6758 Blog B-14
 tagline:             'A template based on the Lanyon Jekyll theme'
-description:         'Here we present our analysis for the first Milestone of the NHL data analysis project.'
+description:         'Here we present our analysis of the NHL data analysis project for IFT6758.'
 url:                 ''
 baseurl:             ''
 paginate:            5
