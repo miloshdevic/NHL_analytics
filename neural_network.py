@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from tensorflow import keras
 from tensorflow.keras import layers
 from utils.model_utils import *
+from utils.plot_utils import *
 
 
 def train(X_training, y_training, X_validation, y_validation):
@@ -87,6 +88,18 @@ def plot_figures(model, history, X_testing, y_testing):
     plt.legend(loc='best')
     plt.show()
 
+    # make the probability predictions 1D
+    predictions = preds.flatten()
+
+    # goal rate vs probability percentile
+    shot_prob_model_percentile_nn(predictions, y_test)
+
+    # cumulative proportion of goals vs probability percentile
+    plot_cumulative_sum_nn(predictions, y_test)
+
+    # reliability curve
+    plot_calibration_curve_nn(predictions, y_test)
+
 
 if __name__ == '__main__':
     # Load dataset
@@ -104,7 +117,8 @@ if __name__ == '__main__':
     nn_model, model_history = train(X_train, y_train, X_val, y_val)
 
     # save model
-    nn_model.save("models/neural_network_rfc.keras")
+    nn_model.save("models/neural_network_rfc_ft.keras")
 
     # plot metric figures
     plot_figures(nn_model, model_history, X_test, y_test)
+

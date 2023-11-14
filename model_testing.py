@@ -4,7 +4,6 @@ import tensorflow as tf
 from tensorflow import keras
 import comet_ml
 from comet_ml import API
-from comet_ml.integration.sklearn import load_model
 from utils.model_utils import *
 from utils.plot_utils import *
 
@@ -42,13 +41,14 @@ def predict_xgboost(df):
     # Load the model from Comet Registry
     xgb_model = pickle.load(open("comet_models/xgboost_3rd.pkl", "rb"))
 
-    ## preprocess the test dataset
+    # preprocess the test dataset
     # dropna
     df.dropna(inplace=True)
     # selecting the same features as in the training dataset
-    X_test = df[['DistanceLastEvent','TimeLastEvent','LastEvent_XCoord','isEmptyNet','LastEvent_YCoord', 'DistanceToGoal']]
+    X_test = df[
+        ['DistanceLastEvent', 'TimeLastEvent', 'LastEvent_XCoord', 'isEmptyNet', 'LastEvent_YCoord', 'DistanceToGoal']]
     y_test = df['isGoal']
-    
+
     # predictions
     prediction = xgb_model.predict(X_test)
     return prediction, y_test
@@ -68,7 +68,7 @@ def predict_neural_network(df):
     X_test, y_test = preprocess_neural_network_rfc(df)
 
     # Make predictions
-    model = tf.keras.models.load_model("comet_models/neural_network_rfc.keras")
+    model = tf.keras.models.load_model("comet_models/neural_network_rfc_ft.keras")
     prediction = model.predict(X_test)
 
     return prediction, y_test
@@ -84,14 +84,11 @@ if __name__ == '__main__':
     # get test data for advanced models
     df_rs_am, df_playoffs_am = get_test_data_advanced_models()
 
-
     # to have all the predictions in one figure (1 for regular season and 1 for playoffs)
     all_predictions_rs = []
     all_y_true_rs = []
     all_predictions_pl = []
     all_y_true_pl = []
-
-
 
     # BASELINE MODELS
     ###############################################################
@@ -108,13 +105,11 @@ if __name__ == '__main__':
 
     ###############################################################
 
-
-
     # ADVANCED MODELS
     ###############################################################
 
     # download xgboost model programmatically using the Python API
-    # download_model(api_key, workspace_name, model_name="xgboost_1st", version="1.2.0")
+    download_model(api_key, workspace_name, model_name="xgboost_1st", version="1.2.0")
 
     # test XGBoost models:
     # model_xgb_rs, prediction_xgb_rs = predict_xgboost(df_rs_am)  # regular season
@@ -125,14 +120,11 @@ if __name__ == '__main__':
 
     ###############################################################
 
-
-
-
     # OTHER MODEL
     ###############################################################
 
     # download neural network model
-    download_model(api_key, workspace_name, model_name="first-neural-network", version="1.6.0")
+    download_model(api_key, workspace_name, model_name="first-neural-network", version="1.8.0")
 
     # test the neural network:
     prediction_nn_rs, y_true_nn_rs = predict_neural_network(df_rs_am)  # regular season
@@ -166,11 +158,9 @@ if __name__ == '__main__':
 
     ###############################################################
 
-
     # PLOT ONE FIGURE FOR ALL THE MODELS
     ###############################################################
 
     # TODO: plot one ROC figure with all the curves of each model (same for the other 3 figures)
-
 
     ###############################################################
