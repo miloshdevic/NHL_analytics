@@ -1,6 +1,7 @@
 import pickle
 import pandas as pd
 import tensorflow as tf
+from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
 from tensorflow import keras
 import comet_ml
 from comet_ml import API
@@ -46,6 +47,16 @@ def predict_logreg(df, feature):
 
     # predictions
     prediction = lr_model.predict_proba(X_test)[:, 1]
+    pred = lr_model.predict(X_test)
+
+    # Evaluate the model
+    test_accuracy = accuracy_score(y_test, pred)
+    print(f'Test accuracy: {test_accuracy * 100:.2f}%')
+
+    # confusion matrix
+    print(confusion_matrix(y_test, pred))
+    print(classification_report(y_test, pred))
+
     return prediction, y_test
 
 
@@ -65,6 +76,16 @@ def predict_xgboost(df):
 
     # predictions
     prediction = xgb_model.predict_proba(X_test)[:, 1]
+    pred = xgb_model.predict(X_test)
+
+    # Evaluate the model
+    test_accuracy = accuracy_score(y_test, pred)
+    print(f'Test accuracy: {test_accuracy * 100:.2f}%')
+
+    # confusion matrix
+    print(confusion_matrix(y_test, pred))
+    print(classification_report(y_test, pred))
+
     return prediction, y_test
 
 
@@ -75,7 +96,17 @@ def predict_neural_network(df):
     X_test, y_test = preprocess_neural_network_rfc(df)
 
     # Make predictions
-    model = tf.keras.models.load_model("comet_models/neural_network_rfc_final.keras")
-    prediction = model.predict(X_test)
+    nn_model = tf.keras.models.load_model("comet_models/neural_network_rfc_final.keras")
+    prediction = nn_model.predict(X_test)
+
+    # Evaluate the model
+    test_loss, test_accuracy = nn_model.evaluate(X_test, y_test)
+    print(f'Test accuracy: {test_accuracy * 100:.2f}%')
+
+    preds = np.round(nn_model.predict(X_test), 0)
+
+    # confusion matrix
+    print(confusion_matrix(y_test, preds))
+    print(classification_report(y_test, preds))
 
     return prediction, y_test
