@@ -30,17 +30,22 @@ def download_model(api_key, workspace_name, model_name, version):
 
 def predict_logreg(df, feature):
     df = df.copy()
-	
+
+    if len(feature) == 2:
+        lr_model = pickle.load(open("comet_models/LogisticRegression" + feature[0] + '_' + feature[1] + ".pkl", "rb"))
+    else:
+        lr_model = pickle.load(open("comet_models/LogisticRegression" + feature[0] + ".pkl", "rb"))
+
     # Load the model from Comet Registry
-    lr_model = pickle.load(open("comet_models/logistic_regression_"+feature[0]+".pkl", "rb"))
-    
+    # lr_model = pickle.load(open("comet_models/LogisticRegression" + feature[0] + ".pkl", "rb"))
+
     # test the baseline models
     df.dropna(inplace=True)
     X_test = df[feature].to_numpy()
     y_test = df[["isGoal"]].to_numpy()
-    
+
     # predictions
-    prediction = lr_model.predict_proba(X_test)[:,1]
+    prediction = lr_model.predict_proba(X_test)[:, 1]
     return prediction, y_test
 
 
@@ -55,13 +60,12 @@ def predict_xgboost(df):
     df.dropna(inplace=True)
     # selecting the same features as in the training dataset
     X_test = df[
-        ['DistanceLastEvent', 'TimeLastEvent', 'LastEvent_XCoord', 'isEmptyNet', 'LastEvent_YCoord', 'DistanceToGoal']]
+        ['DistanceLastEvent', 'TimeLastEvent', 'isEmptyNet', 'Period', 'LastEvent_YCoord', 'DistanceToGoal']]
     y_test = df['isGoal']
 
     # predictions
-    prediction = xgb_model.predict_proba(X_test)[:,1]
+    prediction = xgb_model.predict_proba(X_test)[:, 1]
     return prediction, y_test
-
 
 
 def predict_neural_network(df):
@@ -75,5 +79,3 @@ def predict_neural_network(df):
     prediction = model.predict(X_test)
 
     return prediction, y_test
-
-    
