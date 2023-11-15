@@ -71,6 +71,7 @@ To address this imbalance, we should consider data resampling techniques or util
 
 For logistic regression models as baseline models, we tried just the basic logistic regression classifier to fit the data. Also we applied the basic data preprocessing like removing duplicates and nan values from the training, validation sets. Here we used evaluation metrics like training set accuracy, validation set accuracy, f1 score, Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC Curve, the goal rate as a function of the shot probability, the cumulative proportion of goals, and model percentile, and the calibration curve to compare with other models’ performances.
 
+### 3.1 Question 2 & 3
 
 {% include image_full.html imageurl="/images/milestone2/ROC_curve_3lr.png" caption="Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC Curve" %}
 
