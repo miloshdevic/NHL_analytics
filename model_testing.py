@@ -40,7 +40,7 @@ def predict_logreg(df, feature):
     y_test = df[["isGoal"]].to_numpy()
     
     # predictions
-    prediction = xgb_model.predict_proba(X_test)[:,1]
+    prediction = lr_model.predict_proba(X_test)[:,1]
     return prediction, y_test
 
 

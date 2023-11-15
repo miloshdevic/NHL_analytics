@@ -240,3 +240,87 @@ def plot_calibration_curve_nn(predictions, y_true):
     plt.plot(mpv, fop, marker='.')
     plt.title('Calibration curve')
     plt.show()
+
+
+def plot_goal_rate_5models(pred_probs, y_label, labels, file_name=None):
+    """
+    Create the goal rate plot
+    Args:
+        pred_probs: list of arrays, each array contains de probability of an event to be a goal
+        y_label: list of arrays, each array contains the actual label of an event
+        labels: list of strings, labels to give in the legend
+        file_name: str, if None, do nothing, if it's a string, save the figure name as the string.
+
+    Returns:
+
+    """
+    for prob, y, label in zip(pred_probs, y_label, labels):
+        percentile, percentile_pred, y_val_df = shot_prob_model_percentile(prob, y)
+        bins = np.linspace(0, 100, len(y_val_df['percentile_bin'].unique()))[1:]
+
+        goal_rate_by_percentile_bin = y_val_df.groupby(by=['percentile_bin']).apply(
+            lambda f: f['isGoal'].sum() / (len(f) + 1))
+
+        # print("Length of goal_rate_by_percentile_bin:", len(goal_rate_by_percentile_bin))
+        # print(len(bins))
+        # print("Length of index:", len(goal_rate_by_percentile_bin.index))
+        # print(goal_rate_by_percentile_bin)
+        # goal_rate_by_percentile_bin = y_val_df.groupby(by=['percentile_bin'])['isGoal'].mean()
+        if label != 'XGBoost':
+            g = sns.lineplot(x=bins, y=goal_rate_by_percentile_bin[1:] * 100, label=label)
+            ax = g.axes
+            ax.yaxis.set_major_formatter(mtick.PercentFormatter(100))
+        else:
+            bins = np.linspace(0, 100, len(y_val_df['percentile_bin'].unique()) + 1)[1:]
+            g = sns.lineplot(x=bins, y=goal_rate_by_percentile_bin[1:] * 100, label=label)
+            ax = g.axes
+            ax.yaxis.set_major_formatter(mtick.PercentFormatter(100))
+    plt.xlim(100, 0)
+    plt.ylim(0, 100)
+    plt.xlabel('shot probability model percentile')
+    plt.ylabel('#Goals / (#no_Goals + #Goals)')
+    plt.title('Goal rate of shot probability model percentile')
+    plt.grid(True)
+
+    if file_name:
+        plt.savefig(file_name)
+    plt.show()
+
+
+def plot_cumulative_sum_5models(pred_probs, y_label, labels, file_name=None):
+    """
+    Create cumulative sum of goals plot
+    Args:
+        pred_probs: list of arrays, each array contains de probability of an event to be a goal
+        y_label: list of arrays, each array contains the actual label of an event
+        labels: list of strings, labels to give in the legend
+        file_name: str, if None, do nothing, if it's a string, save the figure name as the string.
+
+    Returns:
+
+    """
+    for prob, y, label in zip(pred_probs, y_label, labels):
+        percentile, percentile_pred, y_val_df = shot_prob_model_percentile(prob, y)
+        number_goal_sum = (y == 1).sum()
+        sum_goals_by_percentile = y_val_df.groupby(by='percentile_bin').apply(
+            lambda f: f['isGoal'].sum() / number_goal_sum)
+        cumu_sum_goals = sum_goals_by_percentile[::-1].cumsum(axis=0)[::-1]
+        bins = np.linspace(0, 100, len(y_val_df['percentile_bin'].unique()))[1:]
+        if label != 'XGBoost':
+            g = sns.lineplot(x=bins, y=cumu_sum_goals[1:] * 100, label=label)
+            ax = g.axes
+            ax.yaxis.set_major_formatter(mtick.PercentFormatter(100))
+        else:
+            bins = np.linspace(0, 100, len(y_val_df['percentile_bin'].unique()) + 1)[1:]
+            g = sns.lineplot(x=bins, y=cumu_sum_goals[1:] * 100, label=label)
+            ax = g.axes
+            ax.yaxis.set_major_formatter(mtick.PercentFormatter(100))
+    plt.xlim(100, 0)
+    plt.ylim(0, 100)
+    plt.xlabel('Shot probability model percentile')
+    plt.ylabel('Cumulative sum')
+    plt.title('Cumulative proportion of goals of shot probability model percentile')
+
+    if file_name:
+        plt.savefig(file_name)
+    plt.show()
