@@ -184,7 +184,10 @@ For feature selection, we have carried out random forest classifier and correlat
    - Also since the accuracy of our model is very high, we are afraid of overfitting, so we chose this one
    - It could also captures feature interaction and correlations between features
 
-2. For correlation matrix, we did this one mostly to have a general and global view of interactions between features, which substantiate our choices from RFC
+2. For correlation matrix, we did this one mostly to have a general and global view of interactions between features, which substantiate our choices from Random Rorest Classifier. If features are highly correlated to 'isGoal' column ( absolute value > 0.7), we should remove them. This is to remove or reduce the possibility that the model looks at those columns only as a 'cheatsheet' for prediction.
+As we see in the correlation matrix, no features has a high correlation with 'isGoal' column, negative or positive, which confirms that our feature selection and engineering is doing a decent job.
+
+{% include image_full.html imageurl="/images/milestone2/feature_selection.png" caption="Feature Selection" %}
 
 [Correlation Matrix]({% link shotMaps/corr_matrix.html %}){:target="_blank"}
 
