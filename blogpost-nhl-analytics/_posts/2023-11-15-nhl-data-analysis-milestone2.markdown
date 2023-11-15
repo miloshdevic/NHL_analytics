@@ -20,6 +20,8 @@ As a result, simply looking at an aggregate count of shots or goals could be mis
 
 From the perspective of data science, we can intuitively model this as a binary classification task, where each shot has a label indicating whether or not it resulted in a goal. Each shot can have a variety of features ranging from simple ones such as distance and angle from the net, to more complicated ones such as game state, previous events, shot types, etc. It is important to note that while a classifier outputs a binary label [0, 1] to indicate whether or not a shot is predicted to be a goal, this is actually not very useful to us. We’re more interested in the raw probabilities that the classifier produces, which (we hope) is an appropriate proxy for the “shot quality”. Analysts can then aggregate shots weighed by the shot quality in an attempt to gauge team or individual performance (though this is not in the scope of this milestone). Furthermore, a shot that is assigned a high likelihood yet did not result in a goal (or vice-versa) may not actually be misclassified. This may be a bit counter intuitive, but remember we are trying to estimate the shot quality in an attempt to estimate the overall number of high quality scoring chances.
 
+(source: the instructors of ift6758, fall 2023)
+
 
 
 ## 2. Feature Engineering I
@@ -275,30 +277,7 @@ We have done several feature selection methods and trained our model on the sele
 
 - Correlation Matrix
 
-   With this method, we included only the following features (the matrix was shown in the previously when we discussed about the feature selection methods we did):
-
-   - Speed
-   - DistanceLastEvent
-   - LastEvent_HIT
-   - LastEvent_SHOT
-   - LastEvent_FACEOFF
-   - LastEvent_GIVEAWAY
-   - DistanceToGoal
-   - isEmptyNet
-   - Rebound
-   - AngleChange
-
-   Those were the 10 best features according to the correlation matrix.
-
-   Here were the results: an accuracy of 90.89% on the validation set and an accuracy of 86% on the test set (obtained from the training set as mentioned above).
-
-{% include image_full.html imageurl="/images/milestone2/model_accuracy_corr_ft1.png" caption="" %}
-
-{% include image_full.html imageurl="/images/milestone2/model_loss_corr_ft1.png" caption="" %}
-
-{% include image_full.html imageurl="/images/milestone2/ROC_curve_corr_ft1.png" caption="" %}
-
-{% include image_full.html imageurl="/images/milestone2/reliability_curve_corr_ft1.png" caption="" %}
+   With this method, we got a confirmation that our features selected from the feature engineering part are good. As mentioned before, none of them were highly correlated so we could keep them all.
 
 
 
@@ -323,31 +302,49 @@ Results on the 2019-2020 regular season dataset
 
 Our models were trained on the NHL data from the 2015-2016 season to the 2018-2019 season and tested on the 2019-2020 season.
 
-For regular season data, we have 4 plots to compare the performances of the 5 models: 3 logistic regression models, 1 XGBoost model and 1 neural network model. We can see that there is a significant difference between the performance of the baseline models (logistic regressions) which were trained on a small set of features, and the models trained on a bigger and more advanced set of features (XGBoost and the neural network). 
+For regular season data, we have 4 plots to compare the performances of the 5 models: 3 logistic regression models, 1 XGBoost model and 1 neural network model. We can see that there is a significant difference between the performance of the baseline models (logistic regressions) which were trained on a small set of features, and the models trained on a bigger and more advanced set of features (XGBoost and the neural network).
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
+{% include image_full.html imageurl="/images/milestone2/ROC_test_reg_season.png" caption="" %}
 
 Note: here, the curves of the “LRDistance” and “LRDistance_ShootingAngle” logistic regressions overlap.
 
 The XGBoost and the neural network have much better performances. Indeed, their area under the ROC curve is 1 which means these models have an ideal measure of separability. On the other hand, the logistic regression models are in the worst situation with an area of either 0.5 or 0.7. These models have no discrimination capacities to distinguish between the positive class and the negative class.
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
+{% include image_full.html imageurl="/images/milestone2/goal_rate_percentile_test_reg_season.png" caption="" %}
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
+For the advanced models, the goal rates start high at the beginning of the x-axis (higher percentiles) then rapidly decrease, followed by a slower decrease. We can interpret this as the model being overconfident in predicting goals for shots with very high probabilities. The rapid decrease might signal a calibration issue. On the other hand, the logistic regressions have a steady decrease which can explain a moderate confidence in high probability shots.
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
+{% include image_full.html imageurl="/images/milestone2/cumulative_proportions_test_reg_season.png" caption="" %}
 
-However, the reliability curve for the neural network is under the reference line, this means it is over-predicting the true probability. Same for the logistic regression models. 
+For the advanced models, there is a steep initial increase in the cumulative proportion of goals which indicates that the models are successful at identifying high-probability shots that are more likely to result in goals. The flatness of the curve afterwards suggests that as we move towards lower percentiles, it may suggest diminishing returns in terms of goal prediction as the model encounters shots with lower predicted probabilities. On the other hand, we see a consistent increase in their curves which shows a consistent predictive power. 
+
+{% include image_full.html imageurl="/images/milestone2/reliability_curve_test_reg_season.png" caption="" %}
+
+We can see that the reliability curve for the neural network is under the reference line, this means it is over-predicting the true probability. Same for the logistic regression models. The XGBoost reliability curve, however, is all over the place which suggests that its predicted probabilities are not calibrated properly. This erratic behavior implies inconsistency in the model’s calibration.
+
+Overall, our models had similar performance results as during their training. For some metrics, the results were better on the test set (ROC for the advanced models) and for other metrics (reliability curve) the results were less good (neural network and xgboost), but none of the models had surprisingly better or worse results than during their training.
+
 
 ### Question 2: 
 
 Results on the 2019-2020 playoffs dataset
 
-For playoffs season data, we have a plot to compare the performances of  5 models including 3 logistic regression models, 1 neural network mode, and 1 XGBoost model.
+For playoffs season data, we have again 4 plots to compare the performances of the 5 models: 3 logistic regression models, 1 XGBoost model and 1 neural network model. 
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
+{% include image_full.html imageurl="/images/milestone2/ROC_test_playoffs.png" caption="" %}
+
+{% include image_full.html imageurl="/images/milestone2/goal_rate_percentile_test_playoffs.png" caption="" %}
+
+{% include image_full.html imageurl="/images/milestone2/cumulative_proportions_test_playoffs.png" caption="" %}
+
+{% include image_full.html imageurl="/images/milestone2/reliability_curve_test_playoffs.png" caption="" %}
+
+
+We can see that there are slight differences in these figures compared to the regular season test set. We can notice that overall, the models performed less well on the playoff dataset as the plots indicate. Indeed, we got worse areas under the ROC curve although a slightly better reliability curve for all models involved. 
+
+This is to be expected since the dataset for the playoffs is much smaller than the dataset for the regular season therefore, one error has much more of an impact on the performance results than one error in the previous dataset. But overall, the results are satisfying because they are pretty similar which shows that the models didn't overfit or underfit and are capable of well generalizing.
+
 
 
 
