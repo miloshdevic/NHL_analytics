@@ -149,6 +149,10 @@ Comet link [here](https://www.comet.com/nhl-analytics-milestone-2/model-registry
 Since our model has a very high accuracy already, we decide to limit the number of features we used to predict. We carried out this process by using the feature importance function from XGBoost, then validate it using SHAP.
 We have picked out the top 6 features and still achieving quite high accuracy but substantially lowering the computing time (gridsearchCV computing time from 10min to less than 5 mins).
 
+{% include image_full.html imageurl="/images/milestone2/SHAP.png" caption="SHAP for feature selection" %}
+
+We used SHAP Explainer to try validating feature importance for all entrys. We can see that the top features are 'TimeLastEvent', 'DistanceLastEvent', 'isEmptyNet' and how they are contributing to the prediction. 
+
 {% include image_full.html imageurl="/images/milestone2/xgboost3_1.png" caption="3rd xgboost model's Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC Curve" %}
 
 {% include image_full.html imageurl="/images/milestone2/xgboost3_2.png" caption="3rd xgboost model's Goal rate vs probability percentile Curve" %}
@@ -156,8 +160,6 @@ We have picked out the top 6 features and still achieving quite high accuracy bu
 {% include image_full.html imageurl="/images/milestone2/xgboost3_3.png" caption="3rd xgboost model's Cumulative proportion of goals vs probability percentile" %}
 
 {% include image_full.html imageurl="/images/milestone2/xgboost3_4.png" caption="3rd xgboost model's Reliability Curve" %}
-
-{% include image_full.html imageurl="/images/milestone2/SHAP.png" caption="SHAP for feature selection" %}
 
 Comet link [here](https://www.comet.com/nhl-analytics-milestone-2/model-registry/xgboost_2/1.2.0?tab=assets)
 
@@ -169,14 +171,14 @@ Now let's try to come up with the best model we can for predicting expected goal
 ### Feature selection
 
 For feature selection, we have carried out random forest classifier and correlation matrix:
-1. Random Forests are commonly used for feature selection due to their ability to provide feature importances. Here are a few reasons why Random Forests are suitable for this purpose:
-   - Randome forest classifier provides feature importance score for easy computable and interpretable references for feature selection.
+1. Random Rorest Classifier is one of the commonly used tool for feature selection due to their ability to provide feature importances. Here are a few reasons why we chose Random Rorest Classifier:
+   - It provides feature importance score for easy computable and interpretable references for feature selection.
    - Also since the accuracy of our model is very high, we are afraid of overfitting, so we chose this one
-   - RFC could also captures feature interaction and correlations between features
+   - It could also captures feature interaction and correlations between features
 
 2. For correlation matrix, we did this one mostly to have a general and global view of interactions between features, which substantiate our choices from RFC
 
-{% include image_full.html imageurl="/images/milestone2/correlation_matrix.png" caption="Part of correlation matrix" %}
+[Correlation Matrix]({% link shotMaps/corr_matrix.html %}){:target="_blank"}
 
 ### Decision trees
 
