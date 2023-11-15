@@ -2,7 +2,7 @@
 layout: post
 title:  "NHL Data Analysis Milestone 2"
 description: "some Introduction."
-date:  2023-11-14
+date:  2023-11-15
 feature_image: # maybe?
 tags: [Download data from API, data cleaning]
 ---
@@ -74,7 +74,13 @@ For logistic regression models as baseline models, we tried just the basic logis
 
 <!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="the calibration curve" %} -->
 
-[Comet link](https://www.comet.com/nhl-analytics-milestone-2#projects)
+As we can see here, the 4 models are compared together. Firstly if we keep the angle as the only feature, it performs more or less like the random classifier. Second, from the goal rate figure, the model with the distance performs better than the random classifier. The feature “distance to goal” is necessary feature to perform well. If we combine the two feature “distance to goal” and “angle” together, it’s slightly better than having only the “distance to goal” feature, but pretty much the same. The first figure with the ROC curves and the AUC metric of the ROC curve is the most useful one to evaluate different models in this case.
+
+Comet links for 3 logistic regression models:
+   - ['DistanceToGoal'](https://www.comet.com/nhl-analytics-milestone-2/logisticregressiondistancetogoal)
+   - ['ShootingAngle'](https://www.comet.com/nhl-analytics-milestone-2/logisticregressionshootingangle)
+   - ['DistanceToGoal-ShootingAngle'](https://www.comet.com/nhl-analytics-milestone-2/logisticregressiondistancetogoal-shootingangle)
+
 
 ## 4. Feature Engineering II
 
@@ -182,6 +188,13 @@ For feature selection, we have carried out random forest classifier and correlat
 
 ### Decision trees
 
+For Decision trees models, we tried the decision tree classifier and random forest classifier to fit the data. Then we applied the feature selection methods in the previous part to both of the classifiers. Here we used evaluation metrics like training set accuracy, validation set accuracy, f1 score, Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC
+Curve, the goal rate as a function of the shot probability, the cumulative proportion of goals, and 
+model percentile, and the calibration curve to compare with other models’ performances.
+
+<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
+<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
+
 
 ### Neural Networks
 
@@ -229,54 +242,63 @@ After reading some articles, we have come to the conclusion that a SGD optimizer
 
 #### III. Feature Selection
 
-We have done several feature selection methods and trained our model on the selected ones. 
+We have done several feature selection methods and trained our model on the selected ones:
 
-1. Random Forest Classifier
+- Random Forest Classifier
 
    With this method, we kept the following features (the weights were shown in the previously when we discussed about the feature selection methods we did):
-      - TimeLastEvent
-      - Speed
-      - DistanceLastEvent
-      - LastEvent_XCoord
-      - LastEvent_YCoord
-      - LastEvent
-      - DistanceToGoal
-      - XCoord
-      - GameTime
-      - Period
-
-
+   
+   - TimeLastEvent
+   - Speed
+   - DistanceLastEvent
+   - LastEvent_XCoord
+   - LastEvent_YCoord
+   - LastEvent
+   - DistanceToGoal
+   - XCoord
+   - GameTime
+   - Period
+   
    Here were our results: accuracy of 97.78% on the test set (obtained from the training set as mentioned above).
 
-   {% include image_full.html imageurl="/images/milestone2/model_accuracy_rfc_ft.png" caption="" %}
-   {% include image_full.html imageurl="/images/milestone2/model_loss_rfc_ft.png" caption="" %}
-   {% include image_full.html imageurl="/images/milestone2/ROC_curve_rfc_ft.png" caption="" %}
-   {% include image_full.html imageurl="/images/milestone2/goal_rate_percentile_nn_rfc.png" caption="" %}
-   {% include image_full.html imageurl="/images/milestone2/cumulative_proportions_nn_rfc.png" caption="" %}
-   {% include image_full.html imageurl="/images/milestone2/reliability_curve_rfc_ft.png" caption="" %}
+{% include image_full.html imageurl="/images/milestone2/model_accuracy_rfc_ft.png" caption="" %}
 
-2. Correlation Matrix
+{% include image_full.html imageurl="/images/milestone2/model_loss_rfc_ft.png" caption="" %}
+
+{% include image_full.html imageurl="/images/milestone2/ROC_curve_rfc_ft.png" caption="" %}
+
+{% include image_full.html imageurl="/images/milestone2/goal_rate_percentile_nn_rfc.png" caption="" %}
+
+{% include image_full.html imageurl="/images/milestone2/cumulative_proportions_nn_rfc.png" caption="" %}
+
+{% include image_full.html imageurl="/images/milestone2/reliability_curve_rfc_ft.png" caption="" %}
+
+- Correlation Matrix
 
    With this method, we included only the following features (the matrix was shown in the previously when we discussed about the feature selection methods we did):
-      - Speed
-      - DistanceLastEvent
-      - LastEvent_HIT
-      - LastEvent_SHOT
-      - LastEvent_FACEOFF
-      - LastEvent_GIVEAWAY
-      - DistanceToGoal
-      - isEmptyNet
-      - Rebound
-      - AngleChange
+
+   - Speed
+   - DistanceLastEvent
+   - LastEvent_HIT
+   - LastEvent_SHOT
+   - LastEvent_FACEOFF
+   - LastEvent_GIVEAWAY
+   - DistanceToGoal
+   - isEmptyNet
+   - Rebound
+   - AngleChange
 
    Those were the 10 best features according to the correlation matrix.
 
    Here were the results: an accuracy of 90.89% on the validation set and an accuracy of 86% on the test set (obtained from the training set as mentioned above).
 
-   {% include image_full.html imageurl="/images/milestone2/model_accuracy_corr_ft1.png" caption="" %}
-   {% include image_full.html imageurl="/images/milestone2/model_loss_corr_ft1.png" caption="" %}
-   {% include image_full.html imageurl="/images/milestone2/ROC_curve_corr_ft1.png" caption="" %}
-   {% include image_full.html imageurl="/images/milestone2/reliability_curve_corr_ft1.png" caption="" %}
+{% include image_full.html imageurl="/images/milestone2/model_accuracy_corr_ft1.png" caption="" %}
+
+{% include image_full.html imageurl="/images/milestone2/model_loss_corr_ft1.png" caption="" %}
+
+{% include image_full.html imageurl="/images/milestone2/ROC_curve_corr_ft1.png" caption="" %}
+
+{% include image_full.html imageurl="/images/milestone2/reliability_curve_corr_ft1.png" caption="" %}
 
 
 
@@ -297,8 +319,36 @@ For this part, we have attempted many different things to get the best model pos
 
 ### Question 1: 
 
+Results on the 2019-2020 regular season dataset
+
+Our models were trained on the NHL data from the 2015-2016 season to the 2018-2019 season and tested on the 2019-2020 season.
+
+For regular season data, we have 4 plots to compare the performances of the 5 models: 3 logistic regression models, 1 XGBoost model and 1 neural network model. We can see that there is a significant difference between the performance of the baseline models (logistic regressions) which were trained on a small set of features, and the models trained on a bigger and more advanced set of features (XGBoost and the neural network). 
+
+<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
+
+Note: here, the curves of the “LRDistance” and “LRDistance_ShootingAngle” logistic regressions overlap.
+
+The XGBoost and the neural network have much better performances. Indeed, their area under the ROC curve is 1 which means these models have an ideal measure of separability. On the other hand, the logistic regression models are in the worst situation with an area of either 0.5 or 0.7. These models have no discrimination capacities to distinguish between the positive class and the negative class.
+
+<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
+
+<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
+
+<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
+
+However, the reliability curve for the neural network is under the reference line, this means it is over-predicting the true probability. Same for the logistic regression models. 
 
 ### Question 2: 
+
+Results on the 2019-2020 playoffs dataset
+
+For playoffs season data, we have a plot to compare the performances of  5 models including 3 logistic regression models, 1 neural network mode, and 1 XGBoost model.
+
+<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
+
+<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
+
 
 
 Authors:
@@ -321,9 +371,4 @@ Just the [Docs][jekyll-docs] or Better [GitHub][jekyll-gh]
 
 [jekyll-docs]: https://jekyllrb.com/docs/home
 [jekyll-gh]:   https://github.com/jekyll/jekyll
-[2016-2017]: "/_includes/2016-2017_season_nhl_shot_map.html"
-[2017-2018]: "/_includes/2017-2018_season_nhl_shot_map.html"
-[2018-2019]: "/_includes/2018-2019_season_nhl_shot_map.html"
-[2019-2020]: "/_includes/2019-2020_season_nhl_shot_map.html"
-[2020-2021]: "/_includes/2020-2021_season_nhl_shot_map.html"
 [git]: https://github.com/miloshdevic/NHL_analytics.git

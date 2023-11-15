@@ -186,7 +186,7 @@ They exceed the league’s average only in 3 areas of the offensive zone:
 All 3 of these areas either have not much of a good angle for a shot, or are pretty far from the net. We have shown in our analysis in the previous section that the further the shots are from the goal, the smaller their chances of scoring is. We can say that the team overall didn’t shoot enough towards the net which led to less scoring chances therefore less goals so in the end less wins. This can explain why they finished last that season (21 points behind the second worst team).
 
 
-{% include image_full.html imageurl="/images/colorado_avalanche_sm_2016-17.png" %}
+{% include image_full.html imageurl="/images/milestone1/colorado_avalanche_sm_2016-17.png" %}
 
 
 In the 2020-2021 season, the Colorado Avalanche have been shooting much more than all the other teams. They had a much higher shot average than the other teams in almost every section of the offensive zone which would also mean they shot more often than the others. Shooting more often and closer creates more quality scoring opportunities, therefore more goals. They finished 1st overall that season.
@@ -194,7 +194,7 @@ In the 2020-2021 season, the Colorado Avalanche have been shooting much more tha
 We can conclude that the amount of shots and the location of the shots are a big contributing factor that will inevitably help you or not in scoring more goals and winning more games as we can see with the case of the Colorado Avalanche. This does indeed make sense. As Wayne Gretzky, the greatest hockey player on the planet, once said: “You miss 100% of the shots you don’t take”. To score more goals, one must shoot more often.
 
 
-{% include image_full.html imageurl="/images/colorado_avalanche_sm_2020-21.png" %}
+{% include image_full.html imageurl="/images/milestone1/colorado_avalanche_sm_2020-21.png" %}
 
 
 
@@ -202,18 +202,18 @@ We can conclude that the amount of shots and the location of the shots are a big
 
 We can see for the Tampa Bay Lightning that in all 3 seasons, they have been dominating the league in terms of shots taken in the middle of the offensive zone. This shows they’re capable of controlling the offensive play and setting up their attack properly in order to shoot from the most dangerous areas of the ice. This obviously contributed to their success in recent years. 
 
-{% include image_full.html imageurl="/images/tampabay_lightning_sm_2018-19.png" %}
-{% include image_full.html imageurl="/images/tampabay_lightning_sm_2019-20.png" %}
-{% include image_full.html imageurl="/images/tampabay_lightning_sm_2020-21.png" %}
+{% include image_full.html imageurl="/images/milestone1/tampabay_lightning_sm_2018-19.png" %}
+{% include image_full.html imageurl="/images/milestone1/tampabay_lightning_sm_2019-20.png" %}
+{% include image_full.html imageurl="/images/milestone1/tampabay_lightning_sm_2020-21.png" %}
 
 
 On the other hand, we can see that the Buffalo Sabres have been struggling to shoot in the same mentioned areas, falling way behind the league average. They have been however taking more shots on the extremities of the offensive zone. This shows that the opposing team’s defense was able to push off their attack and not allow them to get in the slot and have better scoring opportunities (which resulted in them taking more shots on the outside which has less angle, more distance and more traffic therefore less chance of being a goal).
 
 
 
-{% include image_full.html imageurl="/images/buffalo_sabres_sm_2018-19.png" %}
-{% include image_full.html imageurl="/images/buffalo_sabres_sm_2019-20.png" %}
-{% include image_full.html imageurl="/images/buffalo_sabres_sm_2020-21.png" %}
+{% include image_full.html imageurl="/images/milestone1/buffalo_sabres_sm_2018-19.png" %}
+{% include image_full.html imageurl="/images/milestone1/buffalo_sabres_sm_2019-20.png" %}
+{% include image_full.html imageurl="/images/milestone1/buffalo_sabres_sm_2020-21.png" %}
 
 
 These graphs obviously don’t paint a complete picture because many other aspects need to be considered when trying to explain a team’s success or struggle, one of them being the amount of shots allowed compared to the league’s average (indeed, scoring many goals doesn’t mean much if on the other end they concede goals as easily). However, this still gives us a good picture of how well the offense performs.
