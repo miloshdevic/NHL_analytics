@@ -151,26 +151,23 @@ def preprocess_neural_network_corr(df: pd.DataFrame):
     df.dropna(inplace=True)
     y = df['isGoal'].to_numpy()
 
-    data = pd.get_dummies(df, columns=['ShotType'], prefix='ShotType')
-    data = pd.get_dummies(data, columns=['LastEvent'], prefix='LastEvent')
+    data = pd.get_dummies(df, columns=['LastEvent'], prefix='LastEvent')
 
-    data = data[['LastEvent_TAKEAWAY', 'LastEvent_GIVEAWAY', 'ShotType_Snap Shot', 'ShotType_Wrist Shot',
-                 'ShotType_Slap Shot', 'ShotType_Deflected', 'ShotType_Tip-In', 'DistanceToGoal']]
+    data = data[['Speed', 'AngleChange', 'Rebound', 'isEmptyNet', 'LastEvent_GIVEAWAY', 'LastEvent_SHOT',
+                 'LastEvent_FACEOFF', 'LastEvent_HIT', 'isEmptyNet', 'DistanceToGoal']]
 
     # Make all non-numerical values numerical
-    data['ShotType_Snap Shot'] = data['ShotType_Snap Shot'].astype(int)
-    data['ShotType_Slap Shot'] = data['ShotType_Slap Shot'].astype(int)
-    data['ShotType_Deflected'] = data['ShotType_Deflected'].astype(int)
-    data['ShotType_Wrist Shot'] = data['ShotType_Wrist Shot'].astype(int)
-    data['ShotType_Tip-In'] = data['ShotType_Tip-In'].astype(int)
+    data['Rebound'] = data['Rebound'].astype(int)
 
-    data['LastEvent_TAKEAWAY'] = data['LastEvent_TAKEAWAY'].astype(int)
     data['LastEvent_GIVEAWAY'] = data['LastEvent_GIVEAWAY'].astype(int)
+    data['LastEvent_SHOT'] = data['LastEvent_SHOT'].astype(int)
+    data['LastEvent_FACEOFF'] = data['LastEvent_FACEOFF'].astype(int)
+    data['LastEvent_HIT'] = data['LastEvent_HIT'].astype(int)
 
     X = data
 
     # Create a ColumnTransformer that applies the StandardScaler to the specified columns
-    columns_to_scale = ['DistanceToGoal']
+    columns_to_scale = ['Speed', 'AngleChange', 'Rebound', 'DistanceToGoal']
     preprocessor = ColumnTransformer(
         transformers=[
             (

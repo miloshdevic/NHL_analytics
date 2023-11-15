@@ -8,6 +8,20 @@ tags: [Download data from API, data cleaning]
 ---
 ## Introduction
 
+
+The first milestone gave us some experience with data wrangling, exploratory data analysis, and creating visualizations. Now, we’ll get our hands dirty with feature engineering, feature selection, and statistical modelling. We will continue to build on the play-by-play data acquired from the NHL stats API, and tackle the problem of predicting the probability that a shot is a goal. We will experiment with a number of different models and features, and produce some visualizations to gauge the effectiveness of our model. We will be using comet.ml to keep track of our experiments with our group. 
+
+
+### NHL Background: Expected Goals (xG)
+
+A common question when evaluating sports is “how well did a team play?”, or “how well did a particular player perform?”. To answer such questions, we need some sort of metric or statistic that captures the quality of a team/player’s performance. An obvious metric could be to consider the number of goals or points, but the problem is that goals are rare and ‘noisy’ events, which do not account for other factors such as goalie performance. Shots are another option, but there is no notion of the quality of the shot; i.e. was it from a high-danger area, or was it taken far away from the net? 
+
+As a result, simply looking at an aggregate count of shots or goals could be misleading. In an attempt to work past these issues, analysts have turned to statistical modelling techniques to append the notion of “shot quality” to each shot taken. Expected Goals (xG) estimates the quality of a shot by calculating the likelihood that this shot would have resulted in a goal, based on a variety of factors (features) such as position, shot type, prior events, etc. This attempts to model how experienced viewers watching a game can reasonably gauge how good the quality of a shot is, based on a variety of factors such as the state of the play, how close the shot was taken, etc. 
+
+From the perspective of data science, we can intuitively model this as a binary classification task, where each shot has a label indicating whether or not it resulted in a goal. Each shot can have a variety of features ranging from simple ones such as distance and angle from the net, to more complicated ones such as game state, previous events, shot types, etc. It is important to note that while a classifier outputs a binary label [0, 1] to indicate whether or not a shot is predicted to be a goal, this is actually not very useful to us. We’re more interested in the raw probabilities that the classifier produces, which (we hope) is an appropriate proxy for the “shot quality”. Analysts can then aggregate shots weighed by the shot quality in an attempt to gauge team or individual performance (though this is not in the scope of this milestone). Furthermore, a shot that is assigned a high likelihood yet did not result in a goal (or vice-versa) may not actually be misclassified. This may be a bit counter intuitive, but remember we are trying to estimate the shot quality in an attempt to estimate the overall number of high quality scoring chances.
+
+
+
 ## 2. Feature Engineering I
 
 ### 2.1 Question 1
@@ -152,10 +166,10 @@ Comet link [here](https://www.comet.com/nhl-analytics-milestone-2/model-registry
 
 ### Feature selection
 
-For feature selection, we have carried out randome forest classifier and correlation matrix:
+For feature selection, we have carried out random forest classifier and correlation matrix:
 1. Random Forests are commonly used for feature selection due to their ability to provide feature importances. Here are a few reasons why Random Forests are suitable for this purpose:
    - Randome forest classifier provides feature importance score for easy computable and interpretable references for feature selection.
-   - Also since the accuracy of our model is very high, we are afraid of overfitting, so we choose this one
+   - Also since the accuracy of our model is very high, we are afraid of overfitting, so we chose this one
    - RFC could also captures feature interaction and correlations between features
 
 2. For correlation matrix, we did this one mostly to have a general and global view of interactions between features, which substantiate our choices from RFC
@@ -235,26 +249,30 @@ We have done several feature selection methods and trained our model on the sele
    {% include image_full.html imageurl="/images/milestone2/ROC_curve_rfc_ft.png" caption="" %}
    {% include image_full.html imageurl="/images/milestone2/goal_rate_percentile_nn_rfc.png" caption="" %}
    {% include image_full.html imageurl="/images/milestone2/cumulative_proportions_nn_rfc.png" caption="" %}
-   {% include image_full.html imageurl="/images/milestone2/reliability_curve_nn_rfc.png" caption="" %}
+   {% include image_full.html imageurl="/images/milestone2/reliability_curve_rfc_ft.png" caption="" %}
 
 2. Correlation Matrix
 
    With this method, we included only the following features (the matrix was shown in the previously when we discussed about the feature selection methods we did):
       - Speed
       - DistanceLastEvent
-      - LastEvent
+      - LastEvent_HIT
+      - LastEvent_SHOT
+      - LastEvent_FACEOFF
+      - LastEvent_GIVEAWAY
       - DistanceToGoal
       - isEmptyNet
-      - ShotType
       - Rebound
       - AngleChange
 
-   Here were the results: accuracy of 65.03% on the test set (obtained from the training set as mentioned above).
+   Those were the 10 best features according to the correlation matrix.
 
-   {% include image_full.html imageurl="/images/milestone2/model_accuracy_corr_ft.png" caption="" %}
-   {% include image_full.html imageurl="/images/milestone2/model_loss_corr_ft.png" caption="" %}
-   {% include image_full.html imageurl="/images/milestone2/ROC_curve_corr_ft.png" caption="" %}
-   {% include image_full.html imageurl="/images/milestone2/reliability_curve_corr_ft.png" caption="" %}
+   Here were the results: an accuracy of 90.89% on the validation set and an accuracy of 86% on the test set (obtained from the training set as mentioned above).
+
+   {% include image_full.html imageurl="/images/milestone2/model_accuracy_corr_ft1.png" caption="" %}
+   {% include image_full.html imageurl="/images/milestone2/model_loss_corr_ft1.png" caption="" %}
+   {% include image_full.html imageurl="/images/milestone2/ROC_curve_corr_ft1.png" caption="" %}
+   {% include image_full.html imageurl="/images/milestone2/reliability_curve_corr_ft1.png" caption="" %}
 
 
 
