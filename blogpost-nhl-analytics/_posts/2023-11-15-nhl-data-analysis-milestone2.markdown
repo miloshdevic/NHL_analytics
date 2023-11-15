@@ -62,21 +62,31 @@ We can see that most of the goals scored are in fact non-empty net goals. Once a
 
 ### 3.1 Question 1
 
-By using a basic logistic regression model, we observed an accuracy of 0.91. However, upon deeper data exploration, we identified a significant class imbalance issue within the dataset. The number of data instances with an "isGoal" value of 0 outnumbers those with an "isGoal" value of 1 by approximately a factor of nine to ten. This imbalance raises concerns about the potential for model overfitting, where the model might tend to predict all instances as 0 to achieve a high accuracy. Therefore, even though the accuracy appears high, the model's performance is not good.
+By using a basic logistic regression model, we observed an accuracy of 0.91. However, upon deeper data exploration, we identified a significant class imbalance issue within the dataset as shown in the confusion matrix below. The number of data instances with an "isGoal" value of 0 outnumbers those with an "isGoal" value of 1 by approximately a factor of nine to ten. This imbalance raises concerns about the potential for model overfitting, where the model might tend to predict all instances as 0 to achieve a high accuracy. Therefore, even though the accuracy appears high, the model's performance is not good.
+
+{% include image_full.html imageurl="/images/milestone2/confusion_matrix_lr.png" caption="Confusion Matrix for logistic regression model" %}
+
 
 To address this imbalance, we should consider data resampling techniques or utilize stratified k-fold cross-validation to rebalance the dataset. Furthermore, it's essential to note that accuracy alone is an insufficient metric for evaluating model performance. Alternative evaluation metrics, such as precision, recall, the confusion matrix, ROC curve, AUC (Area Under the Curve), and others, should be taken into account to get a more comprehensive understanding of the model's performance.
 
 For logistic regression models as baseline models, we tried just the basic logistic regression classifier to fit the data. Also we applied the basic data preprocessing like removing duplicates and nan values from the training, validation sets. Here we used evaluation metrics like training set accuracy, validation set accuracy, f1 score, Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC Curve, the goal rate as a function of the shot probability, the cumulative proportion of goals, and model percentile, and the calibration curve to compare with other models’ performances.
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC Curve" %} -->
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="The goal rate as a function of the shot probability" %} -->
+{% include image_full.html imageurl="/images/milestone2/ROC_curve_3lr.png" caption="Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC Curve" %}
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="the cumulative proportion of goals, and model percentile" %} -->
+As we can see here, the 4 models are compared together. For the ROC curve, the random classifier gives us an expected diagonal in ROC curve. If we keep the angle as the only feature, it performs more or less like the random classifier. Second, from the goal rate figure, the model with the distance performs better than the random classifier. The feature “distance to goal” is necessary feature to perform well. If we combine the two feature “distance to goal” and “angle” together, it’s a little bit better than having only the “distance to goal” feature, but pretty much the same with the same AUC, which means that the model doesn't learn much from the feature "angle". The first figure with the ROC curves and the AUC metric of the ROC curve is the most useful one to evaluate different models in this case.
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="the calibration curve" %} -->
+{% include image_full.html imageurl="/images/milestone2/goal_rate_3lr.png" caption="The goal rate as a function of the shot probability" %}
 
-As we can see here, the 4 models are compared together. Firstly if we keep the angle as the only feature, it performs more or less like the random classifier. Second, from the goal rate figure, the model with the distance performs better than the random classifier. The feature “distance to goal” is necessary feature to perform well. If we combine the two feature “distance to goal” and “angle” together, it’s slightly better than having only the “distance to goal” feature, but pretty much the same. The first figure with the ROC curves and the AUC metric of the ROC curve is the most useful one to evaluate different models in this case.
+As for the goal rate plot, we can see that the logistic regression models perform better than random classifier for predicting the shot probability. As the conclusion from the ROC curve, the model with two features perform slightly better than just "distance" feature, the model with only "distance" doesn't perform well because the curve is very contant-like like the random classifier.
+
+{% include image_full.html imageurl="/images/milestone2/cumulative_3lr.png" caption="the cumulative proportion of goals, and model percentile" %}
+
+As for the cumulative plot, it shows that shots with higher predicted probabilities get a significantly larger share of the total goals scored, in contrast to shots with lower probabilities. We got the same conclusion as the two previous figures, the models trained on either distance or angle outperform a random baseline, the model with both features consistently outperforms them for predicting the likelihood of a shot resulting in a goal.
+
+{% include image_full.html imageurl="/images/milestone2/reliability_curve_3lr.png" caption="the calibration curve" %}
+
+As for the calibration plot, the model trained on both features gets calibration values closest to those of the ideally calibrated model. Same conclusion as before, it is the most favorable one among these 4 classifers. However, that the curve does not extend beyond 0.6, underscoring that the predicted probabilities from our models remain below 0.6%, therefore, we lack strong confidence in the predictions made by our models.
 
 Comet links for 3 logistic regression models:
    - ['DistanceToGoal'](https://www.comet.com/nhl-analytics-milestone-2/logisticregressiondistancetogoal)
@@ -193,12 +203,20 @@ As we see in the correlation matrix, no features has a high correlation with 'is
 
 ### Decision trees
 
-For Decision trees models, we tried the decision tree classifier and random forest classifier to fit the data. Then we applied the feature selection methods in the previous part to both of the classifiers. Here we used evaluation metrics like training set accuracy, validation set accuracy, f1 score, Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC
-Curve, the goal rate as a function of the shot probability, the cumulative proportion of goals, and 
-model percentile, and the calibration curve to compare with other models’ performances.
+Comet links for decision tree and random forest models:
+   - [decision tree](https://www.comet.com/nhl-analytics-milestone-2/decision-tree)
+   - [random forest](https://www.comet.com/nhl-analytics-milestone-2/random-forest)
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="" %} -->
+For Decision trees models, we tried the decision tree classifier and random forest classifier to fit the data. We also applied the two different feature selections methods. Then we applied the feature selection methods in the previous part to both of the classifiers. Here we used evaluation metrics like training set accuracy, validation set accuracy, f1 score, Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC
+Curve, the goal rate as a function of the shot probability, the cumulative proportion of goals, and model percentile, and the calibration curve to compare with other models’ performances. The results are already good even without any hyperparameter tuning. Firstly, from the ROC curves, all 4 models perform pretty well. And the f1 score, train and test accuracy are also high. According to the calibration curve, the models tend to over-predict the true probability. Lastly, the curve for the decision tree model with the first feature selection method performs better and closer to the reference line than any model.
+
+{% include image_full.html imageurl="/images/milestone2/ROC_curve_dt.png" caption="Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC Curve" %}
+
+{% include image_full.html imageurl="/images/milestone2/goal_rate_dt.png" caption="The goal rate as a function of the shot probability" %}
+
+{% include image_full.html imageurl="/images/milestone2/cumulative_dt.png" caption="the cumulative proportion of goals, and model percentile" %}
+
+{% include image_full.html imageurl="/images/milestone2/reliability_curve_dt.png" caption="the calibration curve" %}
 
 
 ### Neural Networks
