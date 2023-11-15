@@ -197,6 +197,7 @@ def add_angle(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+# adds information from the previous events to each shot
 def add_previous_events(df: pd.DataFrame) -> pd.DataFrame:
     last_event = np.full((df.shape[0]), None)
     last_event_XCoord = np.zeros(df.shape[0])
@@ -218,6 +219,7 @@ def add_previous_events(df: pd.DataFrame) -> pd.DataFrame:
             i += 1
             continue
 
+        # if it is a different game
         if row['GameID'] != previous_row['GameID']:
             last_event[i] = None
             last_event_XCoord[i] = None
@@ -236,16 +238,7 @@ def add_previous_events(df: pd.DataFrame) -> pd.DataFrame:
             (row['XCoord'] - previous_row['XCoord']) ** 2 + (row['YCoord'] - previous_row['YCoord']) ** 2).round()
         time_last_event[i] = row['GameTime'] - previous_row['GameTime']
 
-        # if previous_row['Period'] == row['Period']:
-        #     time_last_event[i] = (datetime.combine(date.today(), row['GameTime']) -
-        #                           datetime.combine(date.today(), previous_row['GameTime'])).total_seconds()
-        # else:
-        #     time_end_period = (datetime.combine(date.today(), time(0, 20, 0)) -
-        #                        datetime.combine(date.today(), previous_row['GameTime'])).total_seconds()
-        #     time_start_period = (datetime.combine(date.today(), previous_row['GameTime']) -
-        #                          datetime.combine(date.today(), time(0, 0, 0))).total_seconds()
-        #     time_last_event[i] = time_end_period + time_start_period
-
+        # update variables
         previous_row = row
         i += 1
 
@@ -257,6 +250,8 @@ def add_previous_events(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+# adds rebound column
+# True if the last event was also a shot, otherwise False
 def add_rebound(df) -> pd.DataFrame:
     rebound = np.full((df.shape[0]), False)
 
@@ -278,6 +273,8 @@ def add_rebound(df) -> pd.DataFrame:
     return df
 
 
+# adds angle change
+# only include if the shot is a rebound, otherwise 0
 def angle_change(df) -> pd.DataFrame:
     angle_diff = np.zeros(df.shape[0])
 
@@ -303,6 +300,8 @@ def angle_change(df) -> pd.DataFrame:
     return df
 
 
+# adds speed column
+# defined as the distance from the previous event, divided by the time since the previous event
 def add_speed(df) -> pd.DataFrame:
     speed = np.zeros(df.shape[0])
 
@@ -320,6 +319,7 @@ def add_speed(df) -> pd.DataFrame:
     return df
 
 
+# modifies 'GameTime' from datetime to total number of seconds elapsed in the game (float)
 def add_game_seconds(df):
     # transform data type into a datetime.time object
     df['GameTime'] = df['GameTime'].apply(lambda x: datetime.strptime(x, '%M:%S').time())
@@ -366,6 +366,7 @@ def add_game_seconds(df):
     return df
 
 
+# get raw data into a tidied csv file
 def run_tidy_data(folder):
     fileList = [f for f in os.listdir(folder)]
     all_sng_df = pd.DataFrame()
@@ -377,7 +378,6 @@ def run_tidy_data(folder):
 
             # stacking all dataframes
             all_sng_df = pd.concat([all_sng_df, tmp_df])
-
 
     # sort by GameID
     asngsorted_df = all_sng_df.sort_values(by=['GameID', 'Period', 'GameTime'])
