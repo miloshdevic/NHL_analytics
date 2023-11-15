@@ -1,7 +1,7 @@
 import pickle
 import pandas as pd
 import tensorflow as tf
-from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
+from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, ConfusionMatrixDisplay
 from tensorflow import keras
 import comet_ml
 from comet_ml import API
@@ -47,15 +47,19 @@ def predict_logreg(df, feature):
 
     # predictions
     prediction = lr_model.predict_proba(X_test)[:, 1]
-    pred = lr_model.predict(X_test)
 
-    # Evaluate the model
-    test_accuracy = accuracy_score(y_test, pred)
-    print(f'Test accuracy: {test_accuracy * 100:.2f}%')
-
-    # confusion matrix
-    print(confusion_matrix(y_test, pred))
-    print(classification_report(y_test, pred))
+    # UNCOMMENT THIS SECTION TO GET THE METRICS FOR THIS MODEL'S PREDICTIONS
+    # pred = lr_model.predict(X_test)
+    #
+    # # Evaluate the model
+    # print("\nLOGISTIC REGRESSION MODEL METRICS:")
+    # test_accuracy = accuracy_score(y_test, pred)
+    # print(f'Test accuracy: {test_accuracy * 100:.2f}%')
+    #
+    # # confusion matrix
+    # ConfusionMatrixDisplay(confusion_matrix(y_test, pred)).plot()
+    # plt.show()
+    # print(classification_report(y_test, pred))
 
     return prediction, y_test
 
@@ -76,15 +80,20 @@ def predict_xgboost(df):
 
     # predictions
     prediction = xgb_model.predict_proba(X_test)[:, 1]
-    pred = xgb_model.predict(X_test)
 
-    # Evaluate the model
-    test_accuracy = accuracy_score(y_test, pred)
-    print(f'Test accuracy: {test_accuracy * 100:.2f}%')
-
-    # confusion matrix
-    print(confusion_matrix(y_test, pred))
-    print(classification_report(y_test, pred))
+    # UNCOMMENT THIS SECTION TO GET THE METRICS FOR THIS MODEL'S PREDICTIONS
+    # pred = xgb_model.predict(X_test)
+    #
+    # print("\n\nXGBOOST MODEL METRICS:")
+    #
+    # # Evaluate the model
+    # test_accuracy = accuracy_score(y_test, pred)
+    # print(f'Test accuracy: {test_accuracy * 100:.2f}%')
+    #
+    # # confusion matrix
+    # ConfusionMatrixDisplay(confusion_matrix(y_test, pred)).plot()
+    # plt.show()
+    # print(classification_report(y_test, pred))
 
     return prediction, y_test
 
@@ -99,14 +108,18 @@ def predict_neural_network(df):
     nn_model = tf.keras.models.load_model("comet_models/neural_network_rfc_final.keras")
     prediction = nn_model.predict(X_test)
 
-    # Evaluate the model
-    test_loss, test_accuracy = nn_model.evaluate(X_test, y_test)
-    print(f'Test accuracy: {test_accuracy * 100:.2f}%')
-
-    preds = np.round(nn_model.predict(X_test), 0)
-
-    # confusion matrix
-    print(confusion_matrix(y_test, preds))
-    print(classification_report(y_test, preds))
+    # UNCOMMENT THIS SECTION TO GET THE METRICS FOR THIS MODEL'S PREDICTIONS
+    # print("\n\nNEURAL NETWORK MODEL METRICS:")
+    #
+    # # Evaluate the model
+    # test_loss, test_accuracy = nn_model.evaluate(X_test, y_test)
+    # print(f'Test accuracy: {test_accuracy * 100:.2f}%')
+    #
+    # preds = np.round(nn_model.predict(X_test), 0)
+    #
+    # # confusion matrix
+    # ConfusionMatrixDisplay(confusion_matrix(y_test, preds)).plot()
+    # plt.show()
+    # print(classification_report(y_test, preds))
 
     return prediction, y_test
