@@ -96,47 +96,71 @@ Here's an image to illustrate better the "Speed" and "AngleChange" features:
 
 ### 5.1 Question 1
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC Curve" %} -->
+The training data has been split into training and validation data in a 1 to 4 ratio. A seed number for the split has been set at the beginning to keep consistency across the XGBoost model. We are not adding any extra hyperparameters at this time (no ratio adjustment for imbalance data etc.). 
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="The goal rate as a function of the shot probability" %} -->
+The "basic" XGBoost model is doing just a bit better than logistic regression (71% accuracy compare to about 68%). (We did not overlayed the logistic regression curve since it's in a different file.)
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="the cumulative proportion of goals, and model percentile" %} -->
+{% include image_full.html imageurl="/images/milestone2/xgboost1_1.png" caption="1st xgboost model's Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC Curve" %}
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="the calibration curve" %} -->
+{% include image_full.html imageurl="/images/milestone2/xgboost1_2.png" caption="1st xgboost model's Goal rate vs probability percentile Curve" %}
 
-[Comet link](https://www.comet.com/nhl-analytics-milestone-2#projects)
+{% include image_full.html imageurl="/images/milestone2/xgboost1_3.png" caption="1st xgboost model's Cumulative proportion of goals vs probability percentile" %}
+
+{% include image_full.html imageurl="/images/milestone2/xgboost1_4.png" caption="1st xgboost model's Reliability Curve" %}
+
+Comet link [here](https://www.comet.com/nhl-analytics-milestone-2/model-registry/xgboost_2/1.0.0?tab=assets)
 
 ### 5.2 Question 2
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC Curve" %} -->
+First, Defining a dictionary for Hyperparameter tuning and using grid search to do cross-validations. From Grid search CV, we could select the 'best' Hyperparameters and used that for later models
+For Hyperparameter choices, there are many choices of hyperparameter for tuning, but to save computing time and due to the limit for computing power, we selected 3: "gamma", "max_depth", and "n_estimators".
+1. We selected "max_depth" because it's a tree specific hyperparameter. We would like to have deeper tree to capture more complex patter, but also we want to avoid overfitting, so we think this is an important hyperparameter.
+2. "gamma" is to control complexity and verify regularization of our model.
+3. "n_estimator" controls the number of trees in the mode, we chose this Hyperparameter to limit overfitting
+We have also added theweight variable ("scale_pos_weight") to adjust for imbalanced dataset
+After tuning, our model accuracy improved dramatically. (71% to 99%)
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="The goal rate as a function of the shot probability" %} -->
+{% include image_full.html imageurl="/images/milestone2/xgboost2_1.png" caption="2nd xgboost model's Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC Curve" %}
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="the cumulative proportion of goals, and model percentile" %} -->
+{% include image_full.html imageurl="/images/milestone2/xgboost2_2.png" caption="2nd xgboost model's Goal rate vs probability percentile Curve" %}
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="the calibration curve" %} -->
+{% include image_full.html imageurl="/images/milestone2/xgboost2_3.png" caption="2nd xgboost model's Cumulative proportion of goals vs probability percentile" %}
 
-[Comet link](https://www.comet.com/nhl-analytics-milestone-2#projects)
+{% include image_full.html imageurl="/images/milestone2/xgboost2_4.png" caption="2nd xgboost model's Reliability Curve" %}
+
+Comet link [here](https://www.comet.com/nhl-analytics-milestone-2/model-registry/xgboost_2/1.1.0?tab=assets)
 
 ### 5.3 Question 3
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC Curve" %} -->
+Since our model has a very high accuracy already, we decide to limit the number of features we used to predict. We carried out this process by using the feature importance function from XGBoost, then validate it using SHAP.
+We have picked out the top 6 features and still achieving quite high accuracy but substantially lowering the computing time (gridsearchCV computing time from 10min to less than 5 mins).
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="The goal rate as a function of the shot probability" %} -->
+{% include image_full.html imageurl="/images/milestone2/xgboost3_1.png" caption="3rd xgboost model's Receiver Operating Characteristic (ROC) curves and the AUC metric of the ROC Curve" %}
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="the cumulative proportion of goals, and model percentile" %} -->
+{% include image_full.html imageurl="/images/milestone2/xgboost3_2.png" caption="3rd xgboost model's Goal rate vs probability percentile Curve" %}
 
-<!-- {% include image_full.html imageurl="/images/milestone2/.png" caption="the calibration curve" %} -->
+{% include image_full.html imageurl="/images/milestone2/xgboost3_3.png" caption="3rd xgboost model's Cumulative proportion of goals vs probability percentile" %}
 
-[Comet link](https://www.comet.com/nhl-analytics-milestone-2#projects)
+{% include image_full.html imageurl="/images/milestone2/xgboost3_4.png" caption="3rd xgboost model's Reliability Curve" %}
+
+{% include image_full.html imageurl="/images/milestone2/SHAP.png" caption="SHAP for feature selection" %}
+
+Comet link [here](https://www.comet.com/nhl-analytics-milestone-2/model-registry/xgboost_2/1.2.0?tab=assets)
 
 
 ## 6. Give it your best shot!
 
 ### Feature selection
 
+For feature selection, we have carried out randome forest classifier and correlation matrix:
+1. Random Forests are commonly used for feature selection due to their ability to provide feature importances. Here are a few reasons why Random Forests are suitable for this purpose:
+   - Randome forest classifier provides feature importance score for easy computable and interpretable references for feature selection.
+   - Also since the accuracy of our model is very high, we are afraid of overfitting, so we choose this one
+   - RFC could also captures feature interaction and correlations between features
 
+2. For correlation matrix, we did this one mostly to have a general and global view of interactions between features, which substantiate our choices from RFC
 
+{% include image_full.html imageurl="/images/milestone2/correlation_matrix.png" caption="Part of correlation matrix" %}
 
 ### Decision trees
 
@@ -151,7 +175,7 @@ In terms of preprocessing, we encoded the categorical variables, dropped, the ro
 
 #### I. First attempt
 
-At first, we created the neural network with 1 hidden layer containing 32 neurons and trained it on all the features we had from feature engineering 2. It was trained on 100 epochs with the “adam” optimizer and with early stopping. We obtained an accuracy of around 98.5% on the validation set and the test set. The area under the ROC curve was 0.978. However, we can see that on the validation set, the accuracy is all over the place. We have very bad predictions and very good ones too. We figured we would need to optimize the model more. Also, we were worried about overfitting the model. Here are some graphs to illustrate the first attempt:
+At first, we created the neural network with 1 hidden layer(relu activation function) containing 32 neurons and trained it on all the features we had from feature engineering 2. It was trained on 100 epochs with the “adam” optimizer and with early stopping. We obtained an accuracy of around 98.5% on the validation set and the test set. The area under the ROC curve was 0.978. However, we can see that on the validation set, the accuracy is all over the place. We have very bad predictions and very good ones too. We figured we would need to optimize the model more. Also, we were worried about overfitting the model. Here are some graphs to illustrate the first attempt:
 
 {% include image_full.html imageurl="/images/milestone2/model_accuracy_100it.png" caption="" %}
 
