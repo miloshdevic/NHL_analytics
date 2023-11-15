@@ -164,6 +164,8 @@ Comet link [here](https://www.comet.com/nhl-analytics-milestone-2/model-registry
 
 ## 6. Give it your best shot!
 
+Now let's try to come up with the best model we can for predicting expected goals! In this section, we will try several different models, some feature selection methods and hyperparameter tuning.
+
 ### Feature selection
 
 For feature selection, we have carried out random forest classifier and correlation matrix:
@@ -189,7 +191,7 @@ In terms of preprocessing, we encoded the categorical variables, dropped, the ro
 
 #### I. First attempt
 
-At first, we created the neural network with 1 hidden layer(relu activation function) containing 32 neurons and trained it on all the features we had from feature engineering 2. It was trained on 100 epochs with the “adam” optimizer and with early stopping. We obtained an accuracy of around 98.5% on the validation set and the test set. The area under the ROC curve was 0.978. However, we can see that on the validation set, the accuracy is all over the place. We have very bad predictions and very good ones too. We figured we would need to optimize the model more. Also, we were worried about overfitting the model. Here are some graphs to illustrate the first attempt:
+At first, we created the neural network with 1 hidden layer (activation function: relu; loss function: binary cross-entropy) containing 32 neurons and trained it on all the features we had from feature engineering 2. It was trained on 100 epochs with the “adam” optimizer and with early stopping. It trains on 50 epochs with an early stopping that checks if the model hasn't improved for the last 10 epochs (with a minimum of 10 epochs done already) and keeps the wiehgts of the best model. We obtained an accuracy of around 99% on the validation set and the test set. The area under the ROC curve was 0.999. However, we can see that on the validation set, the accuracy is oscillating. We figured we would need to optimize the model more. Also, we were worried about overfitting the model with such high accuracies. Here are some graphs to illustrate the first attempt:
 
 {% include image_full.html imageurl="/images/milestone2/model_accuracy_100it.png" caption="" %}
 
