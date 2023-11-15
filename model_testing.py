@@ -28,11 +28,20 @@ def download_model(api_key, workspace_name, model_name, version):
                                 output_path="comet_models/", expand=True)
 
 
-def predict_logreg(df):
+def predict_logreg(df, feature):
     df = df.copy()
-
-    # TODO: complete this function to test the baseline models
-    pass
+	
+    # Load the model from Comet Registry
+    lr_model = pickle.load(open("comet_models/logistic_regression_"+feature[0]+".pkl", "rb"))
+    
+    # test the baseline models
+    df.dropna(inplace=True)
+    X_test = df[feature].to_numpy()
+    y_test = df[["isGoal"]].to_numpy()
+    
+    # predictions
+    prediction = xgb_model.predict_proba(X_test)[:,1]
+    return prediction, y_test
 
 
 def predict_xgboost(df):
@@ -50,15 +59,9 @@ def predict_xgboost(df):
     y_test = df['isGoal']
 
     # predictions
-    prediction = xgb_model.predict(X_test)
+    prediction = xgb_model.predict_proba(X_test)[:,1]
     return prediction, y_test
 
-
-def predict_decision_tree(df):
-    df = df.copy()
-
-    # TODO: complete this function to test the decision tree model
-    pass
 
 
 def predict_neural_network(df):
@@ -68,7 +71,7 @@ def predict_neural_network(df):
     X_test, y_test = preprocess_neural_network_rfc(df)
 
     # Make predictions
-    model = tf.keras.models.load_model("comet_models/neural_network_rfc_ft.keras")
+    model = tf.keras.models.load_model("comet_models/neural_network_rfc_final.keras")
     prediction = model.predict(X_test)
 
     return prediction, y_test
@@ -94,14 +97,16 @@ if __name__ == '__main__':
     ###############################################################
 
     # download logistic regression models programmatically using the Python API
-    # TODO: specify name and version
-    # download_model(api_key, workspace_name, model_name="", version="")
-
-    # test baseline models:
-    # TODO: insert here code to call the function to run the baseline models
+    # specify name and version
+    download_model(api_key, workspace_name, model_name="logisticregressiondistancetogoal", version="1.1.0")
 
     # add prediction and y_true to the lists
-    # TODO
+    # feature_list = [["DistanceToGoal"], ["ShootingAngle"], ["DistanceToGoal","ShootingAngle"]]
+    # for feature in feature_list:
+    	# model_lr_rs, prediction_lr_rs = predict_logreg(df_rs_am, feature)  # regular season
+    	# model_lr_pl, prediction_lr_pl = predict_logreg(df_rs_pl, feature)  # playoffs
+    	# all_predictions_rs.append(prediction_lr_rs)
+    	# all_predictions_pl.append(all_predictions_pl)
 
     ###############################################################
 
@@ -109,14 +114,15 @@ if __name__ == '__main__':
     ###############################################################
 
     # download xgboost model programmatically using the Python API
-    download_model(api_key, workspace_name, model_name="xgboost_1st", version="1.2.0")
+    download_model(api_key, workspace_name, model_name="xgboost_2", version="1.2.0")
 
     # test XGBoost models:
     # model_xgb_rs, prediction_xgb_rs = predict_xgboost(df_rs_am)  # regular season
     # model_xgb_pl, prediction_xgb_pl = predict_xgboost(df_playoffs_am)  # playoffs
 
     # add prediction and y_true to the lists
-    # TODO
+    # all_predictions_rs.append(prediction_xgb_rs)
+    # all_predictions_pl.append(prediction_xgb_pl)
 
     ###############################################################
 
@@ -124,7 +130,7 @@ if __name__ == '__main__':
     ###############################################################
 
     # download neural network model
-    download_model(api_key, workspace_name, model_name="first-neural-network", version="1.8.0")
+    download_model(api_key, workspace_name, model_name="first-neural-network", version="1.10.0")
 
     # test the neural network:
     prediction_nn_rs, y_true_nn_rs = predict_neural_network(df_rs_am)  # regular season
@@ -136,31 +142,46 @@ if __name__ == '__main__':
     all_y_true_rs.append(y_true_nn_rs)
     all_y_true_pl.append(y_true_nn_pl)
 
-    # plot curves for regular season
-    # TODO: these curves will be removed bc we need to have the curves of all the models in one figure
-    # will be removed before submission
-    plot_roc_curve_nn(prediction_nn_rs, y_true_nn_rs)  # plot the ROC curves
-    # make the probability predictions 1D
-    prediction_nn_rs = prediction_nn_rs.flatten()
-    shot_prob_model_percentile_nn(prediction_nn_rs, y_true_nn_rs)  # plot goal percentile curves
-    plot_cumulative_sum_nn(prediction_nn_rs, y_true_nn_rs)  # plot cumulative goals
-    plot_calibration_curve_nn(prediction_nn_rs, y_true_nn_rs)  # plot calibration curves
-
-    # plot curves for playoffs
-    # TODO: these curves will be removed bc we need to have the curves of all the models in one figure
-    # will be removed before submission
-    plot_roc_curve_nn(prediction_nn_pl, y_true_nn_pl)  # plot the ROC curves
-    # make the probability predictions 1D
-    prediction_nn_pl = prediction_nn_pl.flatten()
-    shot_prob_model_percentile_nn(prediction_nn_rs, y_true_nn_rs)  # plot goal percentile curves
-    plot_cumulative_sum_nn(prediction_nn_pl, y_true_nn_pl)  # plot cumulative goals
-    plot_calibration_curve_nn(prediction_nn_pl, y_true_nn_pl)  # plot calibration curves
 
     ###############################################################
 
     # PLOT ONE FIGURE FOR ALL THE MODELS
     ###############################################################
 
-    # TODO: plot one ROC figure with all the curves of each model (same for the other 3 figures)
+    # plot one ROC figure with all the curves of each model (same for the other 3 figures)
 
     ###############################################################
+    labels = ['LRDistance', 'LRShooting', 'LRDistance_ShootingAngle', 'nn', 'XGBoost']
+    linestyles = ['-', '-', '-', '-', '-']
+    
+    # For regular season data, plot 5 models together
+    # ROC curve
+    # plot_roc_curve(all_predictions_rs, all_y_true_rs, linestyles, labels)
+    
+    # goal_rate figure
+    # percentile, percentile_pred, y_valid_df = shot_prob_model_percentile(all_predictions_rs[0], all_y_true_rs[0])
+    # plot_goal_rate(all_predictions_rs, all_y_true_rs, labels)
+    
+    # cumulative proportion figure
+    # plot_cumulative_sum(all_predictions_rs, all_y_true_rs, labels)
+    
+    # calibration figure
+    # plot_calibration(all_predictions_rs, all_y_true_rs, labels)
+    
+    ###############################################################
+    
+    # For playoffs data, plot 5 models together
+    # ROC curve
+    # plot_roc_curve(all_predictions_pl, all_y_true_pl, linestyles, labels)
+    
+    # goal_rate figure
+    # percentile, percentile_pred, y_valid_df = shot_prob_model_percentile(all_predictions_pl[0], all_y_true_pl[0])
+    # plot_goal_rate(all_predictions_pl, all_y_true_pl, labels)
+    
+    # cumulative proportion figure
+    # plot_cumulative_sum(all_predictions_pl, all_y_true_pl, labels)
+    
+    # calibration figure
+    # plot_calibration(all_predictions_pl, all_y_true_pl, labels)
+    
+    
