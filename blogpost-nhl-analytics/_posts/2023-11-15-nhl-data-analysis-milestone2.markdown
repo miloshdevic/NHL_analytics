@@ -297,7 +297,7 @@ We have come to the conclusion that the neural network trained with the optimize
 For this part, we have attempted many different things to get the best model possible. We tried different types of models, different feature selection methods, shuffled the data and tuned the hyperparameters of our models. We have come to the conclusion that the best model was the best neural network model. When comparing all the different metrics from model to model, we can see that the best neural network had the best reliability curve even though the accuracy and ROC curve was slightly less good than the decision trees. Furthermore, it is the model we spent the most time tuning the hyperparamters and optimizing it as much as possible by trying different structures, optimizers, etc, therefore we felt the most confident with this model.
 
 
-## 7. Evaluate on test set
+## 7. Evaluate on the test sets
 
 ### Question 1: 
 
@@ -337,14 +337,23 @@ For playoffs season data, we have again 4 plots to compare the performances of t
 
 {% include image_full.html imageurl="/images/milestone2/ROC_test_playoffs.png" caption="" %}
 
+The observations are similar to the ones for the regular season test set.
+
 {% include image_full.html imageurl="/images/milestone2/goal_rate_percentile_test_playoffs.png" caption="" %}
+
+We can observe a rising trend for the logistic regression models which might indicate that the models aren't effectively differentiating between high and low probability shots.
 
 {% include image_full.html imageurl="/images/milestone2/cumulative_proportions_test_playoffs.png" caption="" %}
 
+The observations are similar to the ones for the regular season test set.
+
 {% include image_full.html imageurl="/images/milestone2/reliability_curve_test_playoffs.png" caption="" %}
 
+Here we can see that the baseline models still underperform and need a lot of model calibration. The neural network's curve isn't much different either, it still seems to over-predict the true probability. However, the curve for the XGBoost model seems much better and closer to the reference line than any model (better than its curve for the regular season test set).
 
-We can see that there are slight differences in these figures compared to the regular season test set. We can notice that overall, the models performed less well on the playoff dataset as the plots indicate. Indeed, we got worse areas under the ROC curve although a slightly better reliability curve for all models involved. 
+
+To summarize, we can see that there are slight differences in these figures compared to the regular season test set. We can notice that overall, the models performed less well on the playoff dataset as the plots indicate. Indeed, we got worse areas under the ROC curve although a slightly better reliability curve for all models involved. The Goal rate percentile graph and the cumulative proportions graph were very similar to the previous ones for the regular season test set.
+
 
 This is to be expected since the dataset for the playoffs is much smaller than the dataset for the regular season therefore, one error has much more of an impact on the performance results than one error in the previous dataset. But overall, the results are satisfying because they are pretty similar which shows that the models didn't overfit or underfit and are capable of well generalizing.
 
