@@ -311,7 +311,7 @@ We have done several feature selection methods and trained our model on the sele
 
 We have come to the conclusion that the neural network trained with the optimized hyperparameters and the features selected by the random forest classifier had the best results overall. Indeed, it area under the ROC curve is nearly 1, the accuracy is high on new data and it had the best reliability curve of all.
 
-
+[Comet link](https://www.comet.com/nhl-analytics-milestone-2/model-registry/first-neural-network/1.10.0?tab=assets) for the Neural Network model.
 
 
 
@@ -322,11 +322,18 @@ For this part, we have attempted many different things to get the best model pos
 
 ## 7. Evaluate on the test sets
 
+Our models were trained on the NHL data from the 2015-2016 season to the 2018-2019 season and tested on the 2019-2020 season.
+
 ### Question 1: 
 
-Results on the 2019-2020 regular season dataset
+Here we present the confusion matrics for each of the 5 models on the 2019-2020 regular season dataset:
+We can see that the 3 baseline models performs the worst and XGBoost seems to have the best performance. The Neural Network has a lot more false positives than XGBoost.
 
-Our models were trained on the NHL data from the 2015-2016 season to the 2018-2019 season and tested on the 2019-2020 season.
+{% include image_full.html imageurl="/images/milestone2/metrics_lr1_rs.png" caption="Confusion matrix for 1st logistic regression model" %}
+{% include image_full.html imageurl="/images/milestone2/metrics_lr2_rs.png" caption="Confusion matrix for 2nd logistic regression model" %}
+{% include image_full.html imageurl="/images/milestone2/metrics_lr3_rs.png" caption="Confusion matrix for 3rd logistic regression model" %}
+{% include image_full.html imageurl="/images/milestone2/metrics_xbg_rs.png" caption="Confusion matrix for XGBoost model" %}
+{% include image_full.html imageurl="/images/milestone2/metrics_nn_rs.png" caption="Confusion matrix for Neural Network" %}
 
 For regular season data, we have 4 plots to compare the performances of the 5 models: 3 logistic regression models, 1 XGBoost model and 1 neural network model. We can see that there is a significant difference between the performance of the baseline models (logistic regressions) which were trained on a small set of features, and the models trained on a bigger and more advanced set of features (XGBoost and the neural network).
 
@@ -353,7 +360,15 @@ Overall, our models had similar performance results as during their training. Fo
 
 ### Question 2: 
 
-Results on the 2019-2020 playoffs dataset
+Here we present the confusion matrics for each of the 5 models on the 2019-2020 playoffs dataset:
+
+From the confusion matrics, we could see that the logistic regression model is performing a bit better on the playoff dataset than the regular season dataset. XGBoost is still performing the best out of all 5 models, and The Neural Network is still having higher false positive rate than XGBoost.
+
+{% include image_full.html imageurl="/images/milestone2/metrics_lr1_pl.png" caption="Confusion matrix for 1st logistic regression model" %}
+{% include image_full.html imageurl="/images/milestone2/metrics_lr2_pl.png" caption="Confusion matrix for 2nd logistic regression model" %}
+{% include image_full.html imageurl="/images/milestone2/metrics_lr3_pl.png" caption="Confusion matrix for 3rd logistic regression model" %}
+{% include image_full.html imageurl="/images/milestone2/metrics_xbg_pl.png" caption="Confusion matrix for XGBoost model" %}
+{% include image_full.html imageurl="/images/milestone2/metrics_nn_pl.png" caption="Confusion matrix for Neural Network" %}
 
 For playoffs season data, we have again 4 plots to compare the performances of the 5 models: 3 logistic regression models, 1 XGBoost model and 1 neural network model. 
 
@@ -394,7 +409,7 @@ email:             milosh.devic@umontreal.ca
 Name:              Yonglin Zhu (20257137)
 email:             yonglin.zhu@umontreal.ca
 
-[Github](git)
+[Our Github](git)
 
 
 created using [Jekyll](https://jekyllrb.com/)
