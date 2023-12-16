@@ -1,0 +1,3 @@
+INFO:app:Before first request...
+INFO:app:Model loaded!
+INFO:app:Default model downloaded from Comet!

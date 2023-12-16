@@ -18,8 +18,8 @@ class NHLDataDownloader:
         self.all_star = '04'
 
         # urls
-        self.base_url = 'https://statsapi.web.nhl.com/api/v1/game/'
-        self.end_base_url = '/feed/live/'
+        self.base_url = 'https://api-web.nhle.com/v1/gamecenter/'  # old api link: 'https://statsapi.web.nhl.com/api/v1/game/'
+        self.end_base_url = '/play-by-play'  # old api link: '/feed/live/'
         self.cache_file = os.path.join(self.data_dir, f'nhl_play_by_play_{self.season}.json')
 
     @property
@@ -58,14 +58,17 @@ class NHLDataDownloader:
 
         if response.status_code == 200:
             data = response.json()
-            detailed_state = data.get('gameData', {}).get('status', {}).get('detailedState', '')
-            if detailed_state == 'Final':
-                with open(f'{self.data_dir}/nhl_play_by_play_{self.season}_{game_id}.json', 'w') as file:
-                    json.dump(data, file)
-                return True  # data
-            else:
-                print(f"Skipping download for game ID {game_id} as detailedState is not 'Final'")
-                return False
+            with open(f'{self.data_dir}/nhl_play_by_play_{self.season}_{game_id}.json', 'w') as file:
+                json.dump(data, file)
+            return True  # data
+            # detailed_state = data.get('gameData', {}).get('status', {}).get('detailedState', '')
+            # if detailed_state == 'Final':
+            #     with open(f'{self.data_dir}/nhl_play_by_play_{self.season}_{game_id}.json', 'w') as file:
+            #         json.dump(data, file)
+            #     return True  # data
+            # else:
+            #     print(f"Skipping download for game ID {game_id} as detailedState is not 'Final'")
+            #     return False
         else:
             print(f"Failed to download data for game ID {game_id}")
             return False
@@ -115,9 +118,9 @@ class NHLDataDownloader:
 
 if __name__ == '__main__':
     # Set the seasons and data directory
-    nhl_season_start = 2019  # USER INPUT HERE FOR STARTING SEASON (ex: for the 2015-2016 season, put 2015)
+    nhl_season_start = 2015  # USER INPUT HERE FOR STARTING SEASON (ex: for the 2015-2016 season, put 2015)
     nhl_season_end = 2019  # USER INPUT HERE FOR ENDING SEASON (ex: for the 2019-2020 season, put 2019)
-    data_directory = 'nhl_data_test'  # USER INPUT HERE FOR FOLDER WHERE DATA WILL BE SAVED
+    data_directory = 'nhl_data_train'  # USER INPUT HERE FOR FOLDER WHERE DATA WILL BE SAVED
 
     # Create an instance of NHLPlayByPlayDownloader
     nhl_downloader = NHLDataDownloader(str(nhl_season_start), data_directory)
