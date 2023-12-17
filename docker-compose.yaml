@@ -1,0 +1,26 @@
+# docker-compose.yml
+version: '3'
+
+services:
+  serving:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.serving
+    # TODO: change tag accordingly
+    image: ift6758/serving:1.0.0
+    ports:
+     - "4000:4000"
+    environment:
+     - COMET_API_KEY = gmAPCzUKBakTVqV4nYmrnO17S
+     
+###### Uncomment below when you're ready to add the final notebook container to your docker compose
+  # streamlit:
+  #   build:
+  #     context: ./
+  #     dockerfile: ./Dockerfile.streamlit
+  #   # TODO: change tag accordingly
+  #   image: ift6758/streamlit:1.0.0
+  #   ports:
+  #     - 8080:8080
+  #   environment:
+  #     - COMET_API_KEY = gmAPCzUKBakTVqV4nYmrnO17S
