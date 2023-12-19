@@ -1,4 +1,4 @@
-
+.pyc
 .ipynb_checkpoints/baseline-checkpoint.ipynb
 *.csv
 *.json
@@ -6,4 +6,4 @@
 __pycache__/
 COMET_API_KEY
 serving/*.pyc
-serving/flask.log
+flask.log

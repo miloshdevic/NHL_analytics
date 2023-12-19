@@ -4,38 +4,12 @@ import json
 import os as os
 from datetime import datetime, time, date
 
-# keys:
-# ['id', 'season', 'gameType', 'gameDate', 'venue', 'startTimeUTC', 'easternUTCOffset', 'venueUTCOffset',
-# 'tvBroadcasts', 'gameState', 'gameScheduleState', 'period', 'periodDescriptor', 'awayTeam', 'homeTeam', 'clock',
-# 'rosterSpots', 'displayPeriod', 'gameOutcome', 'plays'])
-def print_keys(data, indent=0):
-    if isinstance(data, dict):
-        for key, value in data.items():
-            print('  ' * indent + str(key))
-            print_keys(value, indent + 1)
-    elif isinstance(data, list):
-        for item in data:
-            print_keys(item, indent)
-    else:
-        pass  # Handle other types as needed
-
-def opposite(direction):
-    if direction == 'right':
-        return 'left'
-    elif direction == 'left':
-        return 'right'
-
 
 def create_event_dataframe(file_path):
     # Load .json File
     with open(file_path, 'r') as file:
         playByplay = json.load(file)
-
-    home_team_id = playByplay['homeTeam']['id']
-    away_team_id = playByplay['awayTeam']['id']
-    teams = {home_team_id: playByplay['homeTeam']['name']['default'],
-             away_team_id: playByplay['awayTeam']['name']['default']}
-
+    # print(playByplay['gamePk'])
     # Initialize lists to store information
     game_time = []
     period = []
@@ -44,94 +18,85 @@ def create_event_dataframe(file_path):
     event_type = []
     x_coord = []
     y_coord = []
+    player_name = []
+    shooter = []
+    goalie = []
     shot_type = []
     isGoal = []
     isEmptyNet = []
     strength = []
     rinkSide = []
     season = []
-    s = playByplay['season']
-    id = playByplay['id']
-    print(id)
-
-    # if id != 2019020451:
-    #     df = pd.DataFrame({
-    #         'GameTime': game_time,  # done
-    #         'Period': period,  # done
-    #         'GameID': game_id_list,  # done
-    #         'Team': team,  # done
-    #         'Event': event_type,  # done
-    #         'XCoord': x_coord,  # done
-    #         'YCoord': y_coord,  # done
-    #         'ShotType': shot_type,  # done
-    #         'isGoal': isGoal,  # done
-    #         'isEmptyNet': isEmptyNet,  # done
-    #         'Strength': strength,  # done
-    #         'RinkSide': rinkSide,  # done
-    #         'Season': season  # done
-    #     })
-    #     return df
-
-    for event in playByplay['plays']:
-        print(event['eventId'])
-        if event['periodDescriptor']['periodType'] == "SO":
-            continue
-        game_id_list.append(id)
-        season.append(s)
-        if 'eventOwnerTeamId' in event:
-            team.append(teams[event['eventOwnerTeamId']])
-        elif 'details' in event and 'eventOwnerTeamId' in event['details']:
-            team.append(teams[event['details']['eventOwnerTeamId']])
-        else:
-            team.append('')
-
-        event_type.append(event['typeDescKey'])
-        if event['typeDescKey'] == "shot-on-goal" and 'shotType' in event['details']:  # sometimes API is missing values
-            shot_type.append(event['details']['shotType'])
-        else:
-            shot_type.append('')
-
-        isGoal.append(int(event['typeDescKey'] == 'goal'))
-        game_time.append(event['timeInPeriod'])
-        period.append(event['period'])
-
-        x_coord.append(event['details']['xCoord'] if 'details' in event and 'xCoord' in event['details'] else None)
-        y_coord.append(event['details']['yCoord'] if 'details' in event and 'yCoord' in event['details'] else None)
-
-        if 'eventOwnerTeamId' in event:
-            rinkSide.append(event['homeTeamDefendingSide'] if event['eventOwnerTeamId'] == home_team_id
-                            else opposite(event['homeTeamDefendingSide']))
-        elif 'details' in event and 'eventOwnerTeamId' in event['details']:
-            rinkSide.append(event['homeTeamDefendingSide'] if event['details']['eventOwnerTeamId'] == home_team_id
-                            else opposite(event['homeTeamDefendingSide']))
-        else:
-            rinkSide.append('')
-
-        # Get information about skaters/goaltenders on the ice
-        if 'situationCode' in event:
-            situationCode = str(event['situationCode'])
-
-            # Get the first digit
-            away_goalie = int(situationCode[0])
-            away_skaters = int(situationCode[1])
-            home_skaters = int(situationCode[2])
-            home_goalie = int(situationCode[3])
-
-            if int(away_skaters) == int(home_skaters):
-                strength.append('Even')
+    # for rinkSide information classification
+    home_team = playByplay['gameData']['teams']['home']['name']
+    # Extract relevant information for each event
+    for event in playByplay['liveData']['plays']['allPlays']:
+        if 'result' in event and 'eventTypeId' in event['result']:
+            season.append(
+                playByplay['gameData']['game']['season'][0:4] + '-' + playByplay['gameData']['game']['season'][4:8])
+            # game time not date/time
+            game_time.append(event['about']['periodTime'])
+            period.append(event['about']['period'])
+            game_id_list.append(playByplay['gamePk'])
+            team.append(event['team']['name'] if 'team' in event else None)
+            home_away = 'home' if team[-1] == home_team else 'away'
+            if event['about']['period'] < 5:  # no rinkside for shootout
+                # no rinkSide information for some games for example 2018020666 and 2020020177 between 'Vegas Golden
+                # Knights' and 'Los Angeles Kings'
+                if 'rinkSide' not in playByplay['liveData']['linescore']['periods'][period[-1] - 1][home_away]:
+                    rinkSide.append(None)
+                else:
+                    rinkSide.append(
+                        playByplay['liveData']['linescore']['periods'][period[-1] - 1][home_away]['rinkSide'] if
+                        team[-1] is not None else None)
             else:
-                strength.append('')
+                rinkSide.append(None)
+            event_type.append(event['result']['eventTypeId'])
+            isGoal.append(int(event['result']['eventTypeId'] == 'GOAL') if 'secondaryType' in event['result'] else 0)
+            x_coord.append(event['coordinates']['x'] if 'x' in event['coordinates'] else None)
+            y_coord.append(event['coordinates']['y'] if 'y' in event['coordinates'] else None)
+            # to get all palyer names for that event
+            players = event.get('players', [])
+            player_names = [player['player']['fullName'] for player in players]
+            player_name.append(', '.join(player_names) if player_names else None)
+            # shot and goals
+            if event['result']['eventTypeId'] in ['SHOT', 'GOAL']:
+                for player in players:
+                    if player['playerType'] in ['Shooter', 'Scorer']:
+                        shooter.append(player['player']['fullName'])
+                    elif player['playerType'] in ['Goalie']:
+                        goalie.append(player['player']['fullName'])
+                    else:
+                        ''
+                shot_type.append(event['result']['secondaryType'] if 'secondaryType' in event['result'] else None)
 
-            if int(away_goalie) == 0 and int(event['typeDescKey'] == 'goal') and event['details']['eventOwnerTeamId'] == home_team_id:
-                isEmptyNet.append(1)
-            elif int(home_goalie) == 0 and int(event['typeDescKey'] == 'goal') and event['details']['eventOwnerTeamId'] == away_team_id:
-                isEmptyNet.append(1)
+                if event['result']['eventTypeId'] in ['GOAL']:
+                    # only GOALs in regular time and OT has 'emptyNet' character
+                    if event['about']['period'] < 5:
+                        # isEmptyNet.append(event['result']['emptyNet'])
+                        isEmptyNet.append(event['result']['emptyNet'])
+                        # correcting for empty net goals
+                        if event['result']['emptyNet'] == True:
+                            goalie.append(None)
+                        elif not any('Goalie' in player['playerType'] for player in players):
+                            goalie.append(None)
+                    else:
+                        # Shootout goals are False by default
+                        isEmptyNet.append(0)
+                    strength.append(event['result']['strength']['name'])
+                else:  # if no Goalie for a shot
+                    if not any('Goalie' in player['playerType'] for player in players):
+                        goalie.append(None)
+                    # to have equal length
+                    isEmptyNet.append(0)
+                    strength.append(None)
             else:
+                # to have equal length
+                shooter.append(None)
+                goalie.append(None)
+                shot_type.append(None)
                 isEmptyNet.append(0)
-        else:
-            strength.append('')
-            isEmptyNet.append(0)
-
+                strength.append(None)
 
     # Create a DataFrame from the extracted information
     df = pd.DataFrame({
@@ -142,9 +107,12 @@ def create_event_dataframe(file_path):
         'Event': event_type,
         'XCoord': x_coord,
         'YCoord': y_coord,
+        'PlayerName': player_name,
+        'Shooter': shooter,
+        'Goalie': goalie,
         'ShotType': shot_type,
         'isGoal': isGoal,
-        'isEmptyNet': isEmptyNet,
+        'isEmptyNet': [int(x) for x in isEmptyNet],
         'Strength': strength,
         'RinkSide': rinkSide,
         'Season': season
@@ -152,13 +120,13 @@ def create_event_dataframe(file_path):
     return df
 
 
-def pivot_for_shots_and_goals(df: pd.DataFrame) -> pd.DataFrame:
-    # extract specific events
-    sng_df = df[df['Event'].isin(['shot-on-goal', 'goal', 'faceoff', 'hit', 'giveaway', 'missed-shot',
-                                  'blocked-shot', 'takeaway', 'penalty', 'fight'])]
-    # pivot the DataFrame
+def pivot_for_shots_and_goals(df):
+    # extract SHOT and GOAL events
+    sng_df = df[df['Event'].isin(['SHOT', 'GOAL', 'FACEOFF', 'HIT', 'GIVEAWAY', 'MISSED_SHOT',
+                                  'BLOCKED_SHOT', 'PENALTY', 'TAKEAWAY', 'PENALTY', 'FIGHT'])]
+    # pivot the shots and goal(sng) DataFrame
     sng_df = sng_df.pivot_table(index=['GameID', 'Season', 'Event', 'Period', 'GameTime', 'Team'], columns=None,
-                                values=['XCoord', 'YCoord', 'ShotType', 'isGoal', 'isEmptyNet',
+                                values=['XCoord', 'YCoord', 'Shooter', 'Goalie', 'ShotType', 'isGoal', 'isEmptyNet',
                                         'Strength', 'RinkSide'], aggfunc='first')
     return sng_df
 
@@ -285,7 +253,7 @@ def add_previous_events(df: pd.DataFrame) -> pd.DataFrame:
 
 # adds rebound column
 # True if the last event was also a shot, otherwise False
-def add_rebound(df: pd.DataFrame) -> pd.DataFrame:
+def add_rebound(df) -> pd.DataFrame:
     rebound = np.full((df.shape[0]), False)
 
     previous_row = None
@@ -308,7 +276,7 @@ def add_rebound(df: pd.DataFrame) -> pd.DataFrame:
 
 # adds angle change
 # only include if the shot is a rebound, otherwise 0
-def angle_change(df: pd.DataFrame) -> pd.DataFrame:
+def angle_change(df) -> pd.DataFrame:
     angle_diff = np.zeros(df.shape[0])
 
     previous_row = None
@@ -335,7 +303,7 @@ def angle_change(df: pd.DataFrame) -> pd.DataFrame:
 
 # adds speed column
 # defined as the distance from the previous event, divided by the time since the previous event
-def add_speed(df: pd.DataFrame) -> pd.DataFrame:
+def add_speed(df) -> pd.DataFrame:
     speed = np.zeros(df.shape[0])
 
     i = 0
@@ -353,7 +321,7 @@ def add_speed(df: pd.DataFrame) -> pd.DataFrame:
 
 
 # modifies 'GameTime' from datetime to total number of seconds elapsed in the game (float)
-def add_game_seconds(df: pd.DataFrame) -> pd.DataFrame:
+def add_game_seconds(df):
     # transform data type into a datetime.time object
     df['GameTime'] = df['GameTime'].apply(lambda x: datetime.strptime(x, '%M:%S').time())
 
@@ -399,22 +367,6 @@ def add_game_seconds(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def game_client(file_path) -> pd.DataFrame:
-    df = create_event_dataframe(file_path)
-
-    # keep only shots and goals
-    df_sng = df[df['Event'].isin(['shot', 'goal'])]
-
-    # add distance and angle columns
-    df_sng = add_distance(df_sng)
-    df_sng = add_angle(df_sng)
-
-    # keep only the selected columns
-    df_sng = df_sng[['isEmptyNet', 'isGoal', 'DistanceToGoal', 'ShootingAngle']]
-
-    return df_sng
-
-
 # get raw data into a tidied csv file
 def run_tidy_data(folder):
     fileList = [f for f in os.listdir(folder)]
@@ -439,4 +391,4 @@ if __name__ == '__main__':
     folder_train = 'nhl_data_train'
     folder_test = 'nhl_data_test'
     run_tidy_data(folder_train)
-    # run_tidy_data(folder_test)
+    run_tidy_data(folder_test)

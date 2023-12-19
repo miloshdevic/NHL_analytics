@@ -49,8 +49,9 @@ class NHLDataDownloader:
         nested value of 'status'. If the value is "Final", the game happened.
         """
         if os.path.exists(f'nhl_play_by_play_{self.season}_{game_id}.json'):
-            with open(self.cache_file, 'r') as file:
-                return True  # json.load(file)
+            # with open(self.cache_file, 'r') as file:
+            #     return True  # json.load(file)
+            return True
 
         os.makedirs(self.data_dir, exist_ok=True)
         url = f'{self.base_url}{game_id}{self.end_base_url}'
@@ -118,8 +119,8 @@ class NHLDataDownloader:
 
 if __name__ == '__main__':
     # Set the seasons and data directory
-    nhl_season_start = 2015  # USER INPUT HERE FOR STARTING SEASON (ex: for the 2015-2016 season, put 2015)
-    nhl_season_end = 2019  # USER INPUT HERE FOR ENDING SEASON (ex: for the 2019-2020 season, put 2019)
+    nhl_season_start = 2019  # USER INPUT HERE FOR STARTING SEASON (ex: for the 2019-2020 season, put 2019)
+    nhl_season_end = 2022  # USER INPUT HERE FOR ENDING SEASON (ex: for the 2022-2023 season, put 2022)
     data_directory = 'nhl_data_train'  # USER INPUT HERE FOR FOLDER WHERE DATA WILL BE SAVED
 
     # Create an instance of NHLPlayByPlayDownloader
