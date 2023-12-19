@@ -4,21 +4,8 @@ import json
 import os as os
 from datetime import datetime, time, date
 
-# keys:
-# ['id', 'season', 'gameType', 'gameDate', 'venue', 'startTimeUTC', 'easternUTCOffset', 'venueUTCOffset',
-# 'tvBroadcasts', 'gameState', 'gameScheduleState', 'period', 'periodDescriptor', 'awayTeam', 'homeTeam', 'clock',
-# 'rosterSpots', 'displayPeriod', 'gameOutcome', 'plays'])
-def print_keys(data, indent=0):
-    if isinstance(data, dict):
-        for key, value in data.items():
-            print('  ' * indent + str(key))
-            print_keys(value, indent + 1)
-    elif isinstance(data, list):
-        for item in data:
-            print_keys(item, indent)
-    else:
-        pass  # Handle other types as needed
 
+# returns the opposite of left or right
 def opposite(direction):
     if direction == 'right':
         return 'left'
@@ -52,28 +39,8 @@ def create_event_dataframe(file_path):
     season = []
     s = playByplay['season']
     id = playByplay['id']
-    print(id)
-
-    # if id != 2019020451:
-    #     df = pd.DataFrame({
-    #         'GameTime': game_time,  # done
-    #         'Period': period,  # done
-    #         'GameID': game_id_list,  # done
-    #         'Team': team,  # done
-    #         'Event': event_type,  # done
-    #         'XCoord': x_coord,  # done
-    #         'YCoord': y_coord,  # done
-    #         'ShotType': shot_type,  # done
-    #         'isGoal': isGoal,  # done
-    #         'isEmptyNet': isEmptyNet,  # done
-    #         'Strength': strength,  # done
-    #         'RinkSide': rinkSide,  # done
-    #         'Season': season  # done
-    #     })
-    #     return df
 
     for event in playByplay['plays']:
-        print(event['eventId'])
         if event['periodDescriptor']['periodType'] == "SO":
             continue
         game_id_list.append(id)
@@ -132,7 +99,6 @@ def create_event_dataframe(file_path):
             strength.append('')
             isEmptyNet.append(0)
 
-
     # Create a DataFrame from the extracted information
     df = pd.DataFrame({
         'GameTime': game_time,
@@ -149,6 +115,7 @@ def create_event_dataframe(file_path):
         'RinkSide': rinkSide,
         'Season': season
     })
+
     return df
 
 
@@ -399,7 +366,7 @@ def add_game_seconds(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def game_client(file_path) -> pd.DataFrame:
+def generate_game_client_df(file_path) -> pd.DataFrame:
     df = create_event_dataframe(file_path)
 
     # keep only shots and goals
@@ -439,4 +406,4 @@ if __name__ == '__main__':
     folder_train = 'nhl_data_train'
     folder_test = 'nhl_data_test'
     run_tidy_data(folder_train)
-    # run_tidy_data(folder_test)
+    run_tidy_data(folder_test)
