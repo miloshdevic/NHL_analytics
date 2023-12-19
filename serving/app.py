@@ -58,7 +58,8 @@ def before_first_request():
     # TODO: any other initialization before the first request (e.g. load default model)
     # TODO: Load your default model here using joblib or any other method
     # Replace the following line with your model loading logic
-    api = API(str(COMET_API_KEY))
+    # api = API(str(COMET_API_KEY))
+    api = API(api_key="cX0b8GkNwZ3M1Bzj4d2oeqFmd")
     api.download_registry_model("nhl-analytics-milestone-2", "logisticregressiondistancetogoal",
                                 "1.1.0", output_path="comet_models/", expand=True)
     model = pickle.load(open('comet_models/LogisticRegressionDistanceToGoal.pkl', 'rb'))
