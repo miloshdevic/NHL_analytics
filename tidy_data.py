@@ -172,7 +172,7 @@ def add_distance(df: pd.DataFrame) -> pd.DataFrame:
 
     i = 0
     for j, row in df.iterrows():
-        if row['Event'] in ['GOAL', 'SHOT']:
+        if row['Event'] in ['goal', 'shot']:
             if row['RinkSide'] == 'right':
                 distance_to_goal[i] = np.sqrt(
                     (row['XCoord'] - left_goal[0]) ** 2 + (row['YCoord'] - left_goal[1]) ** 2).round()
@@ -202,7 +202,7 @@ def add_angle(df: pd.DataFrame) -> pd.DataFrame:
 
     i = 0
     for j, row in df.iterrows():
-        if row['Event'] in ['GOAL', 'SHOT']:
+        if row['Event'] in ['goal', 'shot']:
             if row['RinkSide'] == 'right':
                 # if (left_goal[0] - row['XCoord']) != 0:
                 if row['YCoord'] != 0:
@@ -296,7 +296,7 @@ def add_rebound(df: pd.DataFrame) -> pd.DataFrame:
             i += 1
             continue
 
-        if row['Event'] == 'SHOT' and previous_row['Event'] == 'SHOT':
+        if row['Event'] == 'shot' and previous_row['Event'] == 'shot':
             rebound[i] = True
 
         previous_row = row
