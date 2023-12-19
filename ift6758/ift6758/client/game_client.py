@@ -1,21 +1,29 @@
-from ...tidy_data import generate_game_client_df
+from tidy_data import generate_game_client_df
 import pandas as pd
 import numpy as np
 import requests
+import json
+import os
 
 class GameClient:
-    def get_game_data(game_id: int):
+    def ping_game(self, game_id: int) -> pd.DataFrame:
         url_game = f'https://api-web.nhle.com/v1/gamecenter/{int(game_id)}/play-by-play/'
         response = requests.get(url_game)
 
+        id = str(game_id)
+
+        # Move up three levels in the directory structure
+        parent_directory = os.path.abspath(os.path.join(os.getcwd(), os.pardir, os.pardir, os.pardir))
+
+        file_name = os.path.join(parent_directory, f'nhl_play_by_play_{id[:4]}_{game_id}.json')
+
         if response.status_code == 200:
             data = response.json()
-            with open(url_game) as file:
-                return json.dumps(data, file)
+            with open(file_name, 'w') as file:
+                json.dump(data, file)
 
-    def ping_game(game_id: int) -> pd.DataFrame:
         # feature engineering, clean, transform from json to df
-        df = get_game_data(game_id)
+        df = generate_game_client_df(f'{file_name}')
 
         if df is None:
             return pd.DataFrame()
