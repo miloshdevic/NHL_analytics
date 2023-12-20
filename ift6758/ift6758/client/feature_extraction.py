@@ -25,6 +25,7 @@ def create_event_dataframe(file_path):
 
     # Initialize lists to store information
     game_time = []
+    time_left = []
     period = []
     game_id_list = []
     team = []
@@ -60,6 +61,7 @@ def create_event_dataframe(file_path):
 
         isGoal.append(int(event['typeDescKey'] == 'goal'))
         game_time.append(event['timeInPeriod'])
+        time_left.append(event['timeRemaining'])
         period.append(event['period'])
 
         x_coord.append(event['details']['xCoord'] if 'details' in event and 'xCoord' in event['details'] else None)
@@ -102,6 +104,7 @@ def create_event_dataframe(file_path):
     # Create a DataFrame from the extracted information
     df = pd.DataFrame({
         'GameTime': game_time,
+        'TimeLeft': time_left,
         'Period': period,
         'GameID': game_id_list,
         'Team': team,
@@ -370,7 +373,7 @@ def generate_game_client_df(file_path) -> pd.DataFrame:
     df = create_event_dataframe(file_path)
 
     # keep only shots and goals
-    df_sng = df[df['Event'].isin(['shot', 'goal'])]
+    df_sng = df[df['Event'].isin(['shot-on-goal', 'goal'])]
 
     # add distance and angle columns
     df_sng = add_distance(df_sng)
