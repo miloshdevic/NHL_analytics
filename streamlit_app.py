@@ -5,6 +5,7 @@ import requests
 import json
 from ift6758.client import serving_client
 from ift6758.client import game_client
+#from ift6758.client.game_client import *
 
 
 st.title("NHL Live Games Visualization App")
@@ -13,11 +14,21 @@ gc = game_client.Game_Client()
 
 with st.sidebar:
     # Add input for the sidebar
-    workspace = st.text_input("Workspace", "")
-    model = st.text_input("Model", "")
-    version = st.text_input("Version", "")
+    workspace = st.selectbox(
+        "Work space",
+        ("nhl-analytics-milestone-2", "")
+    )
+    model = st.selectbox(
+        "Model",
+        ("logisticregressiondistancetogoal", "logisticregressionshootingangle",
+         "logisticregressiondistancetogoal_shootingangle")
+    )
+    version = st.selectbox(
+        "Version",
+        ("1.1.0", "")
+    )
     download_button = st.button("Download Model")
-    if st.button('Download Model'):
+    if download_button:
         # if model changed, tracker will be cleared, so no interference of seen data between models
         with open('tracker.json', 'w') as outfile:
             data = {}
