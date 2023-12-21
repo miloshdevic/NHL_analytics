@@ -4,14 +4,14 @@ import requests
 import json
 import os
 import logging
-from feature_extraction import *
+# from feature_extraction import *
 
 logger = logging.getLogger(__name__)
 
 # tracker file to not repeat events
-# with open('tracker.json', 'w') as outfile:
-#     data = {}
-#     json.dump(data, outfile)
+with open('tracker.json', 'w') as outfile:
+    data = {}
+    json.dump(data, outfile)
 
 class GameClient:
     def __init__(self):
@@ -25,6 +25,13 @@ class GameClient:
                 return json.load(tracker_file)
         except FileNotFoundError:
             return {}
+
+    # returns the opposite of left or right
+    def opposite(self, direction):
+        if direction == 'right':
+            return 'left'
+        elif direction == 'left':
+            return 'right'
 
     def extract_features(self, play_by_play):
         home_team_id = play_by_play['homeTeam']['id']
@@ -80,10 +87,10 @@ class GameClient:
 
             if 'eventOwnerTeamId' in event:
                 rinkSide.append(event['homeTeamDefendingSide'] if event['eventOwnerTeamId'] == home_team_id
-                                else opposite(event['homeTeamDefendingSide']))
+                                else self.opposite(event['homeTeamDefendingSide']))
             elif 'details' in event and 'eventOwnerTeamId' in event['details']:
                 rinkSide.append(event['homeTeamDefendingSide'] if event['details']['eventOwnerTeamId'] == home_team_id
-                                else opposite(event['homeTeamDefendingSide']))
+                                else self.opposite(event['homeTeamDefendingSide']))
             else:
                 rinkSide.append('')
 
@@ -138,6 +145,89 @@ class GameClient:
 
         return df
 
+    # Calculates the distance between a shot/goal and the net, rounded to the nearest number
+    # the column 'distance_to_goal' is added to the df
+    def add_distance(self, df: pd.DataFrame) -> pd.DataFrame:
+        right_goal = [89, 0]
+        left_goal = [-89, 0]
+        distance_to_goal = np.zeros(df.shape[0])
+
+        i = 0
+        for j, row in df.iterrows():
+            if row['Event'] in ['goal', 'shot-on-goal']:
+                if row['RinkSide'] == 'right':
+                    distance_to_goal[i] = np.sqrt(
+                        (row['XCoord'] - left_goal[0]) ** 2 + (row['YCoord'] - left_goal[1]) ** 2).round()
+
+                elif row['RinkSide'] == 'left':
+                    distance_to_goal[i] = np.sqrt(
+                        (row['XCoord'] - right_goal[0]) ** 2 + (row['YCoord'] - right_goal[1]) ** 2).round()
+
+                else:
+                    distance_to_goal[
+                        i] = None  # some games didn't have the information for which side the team was defending
+            else:
+                distance_to_goal[i] = None
+            i += 1
+
+        # add the column with its values
+        df['DistanceToGoal'] = distance_to_goal
+        return df
+
+    # Calculates the angle between a shot/goal and the net
+    # the column 'shooting_angle' is added to the df
+    def add_angle(self, df: pd.DataFrame) -> pd.DataFrame:
+        right_goal = [89, 0]
+        left_goal = [-89, 0]
+        shooting_angle = np.zeros(df.shape[0])
+
+        i = 0
+        for j, row in df.iterrows():
+            if row['Event'] in ['goal', 'shot-on-goal']:
+                if row['RinkSide'] == 'right':
+                    # if (left_goal[0] - row['XCoord']) != 0:
+                    if row['YCoord'] != 0:
+                        shooting_angle[i] = (
+                                np.arctan((left_goal[0] - row['XCoord']) / row['YCoord']) * (180 / np.pi)).round()
+                    else:
+                        shooting_angle[i] = 0
+
+                elif row['RinkSide'] == 'left':
+                    # if (-right_goal[0] - row['XCoord']) != 0:
+                    if row['YCoord'] != 0:
+                        shooting_angle[i] = (
+                                np.arctan((right_goal[0] - row['XCoord']) / row['YCoord']) * (180 / np.pi)).round()
+                    else:
+                        shooting_angle[i] = 0
+
+                else:
+                    shooting_angle[
+                        i] = None  # some games didn't have the information for which side the team was defending
+            else:
+                shooting_angle[i] = None
+            i += 1
+
+        # add the column with its values
+        df['ShootingAngle'] = shooting_angle
+        return df
+
+    def generate_game_client_df(self, file_path) -> pd.DataFrame:
+        with open(file_path, 'r') as file:
+            play_by_play = json.load(file)
+        df = self.extract_features(play_by_play)
+
+        # keep only shots and goals
+        df_sng = df[df['Event'].isin(['shot-on-goal', 'goal'])]
+
+        # add distance and angle columns
+        df_sng = self.add_distance(df_sng)
+        df_sng = self.add_angle(df_sng)
+
+        # keep only the selected columns
+        df_sng = df_sng[['isEmptyNet', 'isGoal', 'DistanceToGoal', 'ShootingAngle', 'Team']]
+
+        return df_sng
+
     def ping_game(self, game_id: int):
         live = True
         url_game = f'https://api-web.nhle.com/v1/gamecenter/{int(game_id)}/play-by-play/'
@@ -147,58 +237,67 @@ class GameClient:
 
         file_name = f'nhl_play_by_play_{id[:4]}_{game_id}.json'
 
-        if response.status_code == 200:
-            data = response.json()
-            with open(file_name, 'w') as file:
-                json.dump(data, file)
+        data = response.json()
+        with open(file_name, 'w') as file:
+            json.dump(data, file)
 
-            with open(file_name, 'r') as file:
-                play_by_play = json.load(file)
+        with open(file_name, 'r') as file:
+            play_by_play = json.load(file)
 
-            # check if the game is live
-            if play_by_play['gameState'] == 'OFF':
-                live = False
+        # check if the game is live
+        if play_by_play['gameState'] == 'OFF':
+            live = False
 
-            # feature engineering, clean, transform from json to df
-            df_for_pred = generate_game_client_df(f'{file_name}')
-            df = self.extract_features(play_by_play)
-            last_row = df.tail(1)
-            ping = last_row['LastPing'].values[0]
+        # feature engineering, clean, transform from json to df
+        df_for_pred = self.generate_game_client_df(f'{file_name}')
+        df = self.extract_features(play_by_play)
+        last_row = df.tail(1)
+        ping = last_row['LastPing'].values[0]
 
-            period = last_row['Period'].values[0]
-            timeLeft = last_row['TimeLeft'].values[0]
-            home_team = play_by_play['homeTeam']['name']['default']
-            away_team = play_by_play['awayTeam']['name']['default']
-            home_score = play_by_play['homeTeam']['score']
-            away_score = play_by_play['awayTeam']['score']
+        period = last_row['Period'].values[0]
+        timeLeft = last_row['TimeLeft'].values[0]
+        home_team = play_by_play['homeTeam']['name']['default']
+        away_team = play_by_play['awayTeam']['name']['default']
+        home_score = play_by_play['homeTeam']['score']
+        away_score = play_by_play['awayTeam']['score']
 
-            previous_idx = 0
-            if game_id in self.tracker:
-                previous_idx = self.tracker[str(game_id)].get('idx', 0)
-                self.tracker[str(game_id)]['idx'] = len(df_for_pred)
-            else:
-                self.tracker[str(game_id)] = {'idx': len(df_for_pred)}
+        # t = open('tracker.json')
+        # tracker = json.load(t)
+        # previous_idx = 0
+        # if game_id in tracker:
+        #     previous_idx = tracker[str(game_id)]['idx']
+        #     tracker[str(game_id)]['idx'] = len(df_for_pred)
+        # else:
+        #     tracker[str(game_id)] = {}
+        #     tracker[str(game_id)]['idx'] = len(df_for_pred)
+        # with open('tracker.json', 'w') as outfile:
+        #     json.dump(tracker, outfile)
+        # df_for_pred = df_for_pred.reset_index().drop('index', axis=1)[previous_idx:]
 
-            with open('tracker.json', 'w') as outfile:
-                json.dump(self.tracker, outfile)
-
-            df_for_pred = df_for_pred.reset_index().drop('index', axis=1)[previous_idx:]
-
-            return df_for_pred, live, period, timeLeft, home_team, away_team, home_score, away_score
+        previous_idx = 0
+        if game_id in self.tracker:
+            previous_idx = self.tracker[str(game_id)].get('idx', 0)
+            self.tracker[str(game_id)]['idx'] = len(df_for_pred)
         else:
-            print(f"Failed to retrieve live game data for game_id {game_id}")
-            return None
+            self.tracker[str(game_id)] = {'idx': len(df_for_pred)}
+
+        with open('tracker.json', 'w') as outfile:
+            json.dump(self.tracker, outfile)
+
+        df_for_pred = df_for_pred.reset_index().drop('index', axis=1)[previous_idx:]
+
+        return df_for_pred, live, period, timeLeft, home_team, away_team, home_score, away_score
 
 # Testing
-game_id_to_test = 2019020003 # 2022020451 #
-client = GameClient()
-result_df, live, period, timeLEft, home, away, h_score, a_score = client.ping_game(game_id_to_test)
-
-print(result_df)
-print(live)
-print(period)
-print(timeLEft)
-print(home)
-print(away)
-print(h_score)
-print(a_score)
+# game_id_to_test = 2019020003 # 2022020451 #
+# client = GameClient()
+# result_df, live, period, timeLEft, home, away, h_score, a_score = client.ping_game(game_id_to_test)
+#
+# print(result_df)
+# print(live)
+# print(period)
+# print(timeLEft)
+# print(home)
+# print(away)
+# print(h_score)
+# print(a_score)

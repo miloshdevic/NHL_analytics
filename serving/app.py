@@ -12,6 +12,7 @@ import os
 import pickle
 from pathlib import Path
 import logging
+import numpy as np
 
 from comet_ml import API
 from flask import Flask, jsonify, request, abort
@@ -113,8 +114,16 @@ def download_registry_model():
     # with open('COMET_API_KEY', 'r') as f:
     #     COMET_API_KEY = f.read()
 
-    model = "logistic_regression_distance_to_goal.pkl"
+    model = ""
+    current_model = json['model']
     app.logger.info(model)
+
+    if json['model'] == 'logisticregressiondistancetogoal':
+        model = 'LogisticRegressionDistanceToGoal.pkl'
+    elif json['model'] == 'logisticregressionshootingangle':
+        model = 'LogisticRegressionShootingAngle.pkl'
+    elif json['model'] == 'logisticregressiondistancetogoal_shootingangle':
+        model = 'LogisticRegressionDistanceToGoal_ShootingAngle.pkl'
 
     # TODO: check to see if the model you are querying for is already downloaded
     if model_downloaded:
@@ -123,8 +132,8 @@ def download_registry_model():
 
     current_model = json['model']
 
-    if os.path.isfile(f"models/{model}"):
-        loaded_model = pickle.load(open(f"models/{model}", 'rb'))
+    if os.path.isfile(f"comet_models/{model}"):
+        model = pickle.load(open(f"comet_models/{model}", 'rb'))
         app.logger.info(model)
         app.logger.info("Model present!")
     else:
@@ -199,17 +208,24 @@ def predict():
     # if loaded_model is None:
     #     return jsonify({"error": "Model not loaded. Please load or download a model first."})
 
-    X = json['X_logreg']
+    X = pd.DataFrame.from_dict(json)
 
     # TODO: Preprocess input data if needed (convert to DataFrame, etc.)
     input_data = pd.DataFrame(X)  # pd.DataFrame.from_dict(json, orient="index").transpose()
-    # response = pd.Series(model.predict_proba(input_data)[::, 1])
+    response = pd.Series(model.predict_proba(input_data)[:, 1])
 
     # TODO: Perform predictions using the loaded model
     # Example:
-    predictions = model.predict_proba(input_data)
+    # predictions = model.predict_proba(X)[:,1]
+    #
+    # response = pd.DataFrame(predictions).to_json()
 
-    response = {"predictions": predictions}  # Update with actual predictions
+    # response = {"predictions": predictions}  # Update with actual predictions
 
-    app.logger.info(response)
-    return jsonify(response)  # response must be json serializable!
+    # logging.info(f'Number of predictions made: {predictions.shape[0]}')
+    # unique, counts = np.unique(predictions, return_counts=True)
+    # goal_percentage = counts[1] / predictions.shape[0]
+    # logging.info(f'Goal percentage: {goal_percentage}, Number of Goals: {counts[1]}')
+
+    # app.logger.info(response)
+    return response.to_json()  # response must be json serializable!
