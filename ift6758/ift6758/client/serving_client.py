@@ -34,16 +34,15 @@ class ServingClient:
         # body = response.json()
         # df = pd.DataFrame.from_records(body)
         # return df
-        X = X[['DistanceToGoal', 'ShootingAngle']]
+        # X = X[['DistanceToGoal', 'ShootingAngle']]
         # X[['DistanceToGoal', 'ShootingAngle']] = StandardScaler().fit_transform(X[['DistanceToGoal', 'ShootingAngle']])
         json_data = json.loads(X.to_json())
-        r = requests.post(
+        request = requests.post(
             f"{self.base_url}/predict",
             json=json_data
         )
-        # print(r)
-        # print(r.json())
-        return pd.DataFrame(r)
+        response = request.json()
+        return response
 
     def logs(self) -> dict:
         """Get server logs"""
@@ -78,7 +77,7 @@ class ServingClient:
         response = requests.post(self.base_url + '/download_registry_model',
                                  json={'workspace': workspace, 'model': model, 'version': version})
         logger.info("SUCCESS: Model downloaded!")
-        # return response.json()
+        return response.json()
         
         
         

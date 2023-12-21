@@ -13,12 +13,14 @@ import pickle
 from pathlib import Path
 import logging
 import numpy as np
+import json
 
 from comet_ml import API
 from flask import Flask, jsonify, request, abort
 import sklearn
 import pandas as pd
 import joblib
+from sklearn.preprocessing import StandardScaler
 
 import ift6758
 
@@ -67,7 +69,7 @@ def before_first_request():
                                 "1.1.0", output_path="comet_models/", expand=True)
     model = pickle.load(open('comet_models/LogisticRegressionDistanceToGoal.pkl', 'rb'))
     # model = joblib.load("models/logistic_regression_distance_to_goal.pkl")
-    app.logger.info('Default model downloaded from Comet!')
+    app.logger.info('\nDefault model downloaded from Comet!\n')
 
 
 before_first_request()
@@ -114,36 +116,37 @@ def download_registry_model():
     # with open('COMET_API_KEY', 'r') as f:
     #     COMET_API_KEY = f.read()
 
-    model = ""
+    model_name = ""
     current_model = json['model']
     app.logger.info(model)
 
     if json['model'] == 'logisticregressiondistancetogoal':
-        model = 'LogisticRegressionDistanceToGoal.pkl'
+        model_name = 'LogisticRegressionDistanceToGoal.pkl'
     elif json['model'] == 'logisticregressionshootingangle':
-        model = 'LogisticRegressionShootingAngle.pkl'
+        model_name = 'LogisticRegressionShootingAngle.pkl'
     elif json['model'] == 'logisticregressiondistancetogoal_shootingangle':
-        model = 'LogisticRegressionDistanceToGoal_ShootingAngle.pkl'
+        model_name = 'LogisticRegressionDistanceToGoal_ShootingAngle.pkl'
 
     # TODO: check to see if the model you are querying for is already downloaded
     if model_downloaded:
-        app.logger.info("Model already downloaded. Loading the existing model...")
-        return jsonify({"status": "Model already downloaded"})
+        app.logger.info("\nModel already downloaded. Loading the existing model...\n")
+        return jsonify({"\nstatus": "Model already downloaded\n"})
 
     current_model = json['model']
 
-    if os.path.isfile(f"comet_models/{model}"):
-        model = pickle.load(open(f"comet_models/{model}", 'rb'))
-        app.logger.info(model)
-        app.logger.info("Model present!")
+    if os.path.isfile(f"comet_models/{model_name}"):
+        model = pickle.load(open(f"comet_models/{model_name}", 'rb'))
+        app.logger.info(model_name)
+        app.logger.info("\nModel present!\n")
     else:
-        app.logger.info("Model not downloaded yet, downloading it now...")
-        # api = API(str(COMET_API_KEY))
-        api = API(api_key="cX0b8GkNwZ3M1Bzj4d2oeqFmd")
-        api.download_registry_model(json['workspace'], json['model'], json['version'], output_path="./", expand=True)
-        loaded_model = pickle.load(open(f"models/{model}", 'rb'))
+        app.logger.info("\nModel not downloaded yet, downloading it now...\n")
+        api = API(str(COMET_API_KEY))
+        api.download_registry_model(json['workspace'], json['model'], json['version'], output_path="comet_models/",
+                                    expand=True)
+        model = pickle.load(open(f"comet_models/{model_name}", 'rb'))
+        model_downloaded = True
 
-    response = f'{model} has been downloaded successfully!'
+    response = f'\n{model} has been downloaded successfully!\n'
     app.logger.info(response)
     return jsonify(response)  # response must be json serializable!
 
@@ -199,7 +202,7 @@ def predict():
     """
     # Get POST json data
 
-    global current_model
+    # global current_model
 
     json = request.get_json()
     app.logger.info(json)
@@ -208,11 +211,37 @@ def predict():
     # if loaded_model is None:
     #     return jsonify({"error": "Model not loaded. Please load or download a model first."})
 
-    X = pd.DataFrame.from_dict(json)
+    # OG SECTION
+    # X = pd.DataFrame.from_dict(json)
+    #
+    # # TODO: Preprocess input data if needed (convert to DataFrame, etc.)
+    # input_data = pd.DataFrame(X)  # pd.DataFrame.from_dict(json, orient="index").transpose()
+    # response = pd.Series(model.predict_proba(input_data)[:, 1])
+    # return response.to_json()  # response must be json serializable!
 
-    # TODO: Preprocess input data if needed (convert to DataFrame, etc.)
-    input_data = pd.DataFrame(X)  # pd.DataFrame.from_dict(json, orient="index").transpose()
-    response = pd.Series(model.predict_proba(input_data)[:, 1])
+    X = pd.DataFrame.from_dict(json) # pd.read_json(json.dumps(json), orient='records')
+
+    if current_model == 'logisticregressiondistancetogoal':
+        X = X[['DistanceToGoal']].to_numpy()
+        # X[['DistanceToGoal']] = StandardScaler().fit_transform(X[['DistanceToGoal']])
+        # X = X.to_numpy()
+    elif current_model == 'logisticregressionshootingangle':
+        X = X[['ShootingAngle']].to_numpy()
+        # X[['ShootingAngle']] = StandardScaler().fit_transform(X[['ShootingAngle']])
+        # X = X.to_numpy()
+    elif current_model == 'logisticregressiondistancetogoal_shootingangle':
+        X = X[['DistanceToGoal', 'ShootingAngle']].to_numpy()
+        # X[['DistanceToGoal', 'ShootingAngle']] = StandardScaler().fit_transform(X[['DistanceToGoal', 'ShootingAngle']])
+        # X = X.to_numpy()
+
+    predictions = pd.Series(model.predict_proba(X)[:, 1])
+
+    # result = {'predictions': predictions.tolist()}
+    # print(result)
+    # r = result.to_json()
+    # print(r)
+    # predictions = predictions.tolist()
+    return predictions.to_json() # jsonify(result)
 
     # TODO: Perform predictions using the loaded model
     # Example:
@@ -228,4 +257,4 @@ def predict():
     # logging.info(f'Goal percentage: {goal_percentage}, Number of Goals: {counts[1]}')
 
     # app.logger.info(response)
-    return response.to_json()  # response must be json serializable!
+    # return response.to_json()  # response must be json serializable!

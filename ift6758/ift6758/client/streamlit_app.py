@@ -12,6 +12,12 @@ st.title("NHL Live Games Visualization App")
 sc = ServingClient(ip='127.0.0.1',port = 8000)
 gc = GameClient()
 
+# Convert int64 values to Python int for JSON serialization
+def convert_to_python_types(obj):
+    if isinstance(obj, np.int64):
+        return int(obj)
+    return obj
+
 with st.sidebar:
     # Add input for the sidebar
     workspace = st.selectbox(
@@ -39,12 +45,11 @@ with st.sidebar:
 with st.container():
     # Add Game ID input
     game_id = st.text_input("Game ID", "")
-    ping_button = st.button("Ping Game (press 2 times)")
+    ping_button = st.button("Ping Game")
 
 with st.container():
     # Add Game info and predictions
     if ping_button:
-        df_for_pred, live, period, timeLeft, home_team, away_team, home_score, away_score = gc.ping_game(int(game_id))
         with st.container():
             home_xG = 0
             away_xG = 0
@@ -55,19 +60,19 @@ with st.container():
             # predictions = r.json()
 
             # Display game information and expected goals
+            df_for_pred, live, period, timeLeft, home_team, away_team, home_score, away_score = gc.ping_game(int(game_id))
             st.subheader(f"Game {game_id}: {home_team} (Home) vs {away_team} (Away)")
             if live:
                 st.write(f"Period: {period} - {timeLeft} left")
             else:
                 st.write(f'The game ended with the score: {home_team} {home_score} - {away_score} {away_team}')
             if len(df_for_pred) != 0:
-                df_og = df_for_pred.copy()
+                # df_og = df_for_pred.copy()
                 y = sc.predict(df_for_pred)
-                st.write(pd.DataFrame(y))
-                # df_y = pd.DataFrame(y.values)
-                df_for_pred['xG'] = y #df_y.iloc[:, 1]
-                # st.write(f'{df_for_pred}')
-                st.table(df_for_pred)
+                y = list(y.values())
+                y = [round(value) for value in y]  # [1 if value > 0.58 else 0 for value in y] #
+                df_y = pd.DataFrame(y)
+                df_for_pred['xG'] = df_y.values
 
                 home_xG = df_for_pred[home_team == df_for_pred['Team']]['xG'].sum()
                 away_xG = df_for_pred[away_team == df_for_pred['Team']]['xG'].sum()
@@ -89,17 +94,17 @@ with st.container():
             away_xG = data[str(game_id)]['away_xG']
             cols = st.columns(2)
             cols[0].metric(label=home_team + ' xG (actual)', value=str(home_xG) + " (" + str(home_score) + ')',
-                           delta=home_score - home_xG)
+                           delta=int(home_score) - int(home_xG))
             cols[1].metric(label=away_team + ' xG (actual)', value=str(away_xG) + " (" + str(away_score) + ')',
-                           delta=away_score - away_xG)
+                           delta=int(away_score) - int(away_xG))
 
             with open('tracker.json', 'w') as outfile:
-                json.dump(data, outfile)
+                json.dump(data, outfile, default=convert_to_python_types)
 
             # df = df_for_pred.reset_index()
             if len(df_for_pred) != 0:
                 st.subheader("Data used for predictions:")
-                st.dataframe(df_for_pred.style.highlight_max(axis=0, color='lightgreen'))
+                st.dataframe(df_for_pred)
             else:
                 st.write("We have seen all the events for", game_id)
 

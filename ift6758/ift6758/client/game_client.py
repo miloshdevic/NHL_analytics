@@ -224,7 +224,7 @@ class GameClient:
         df_sng = self.add_angle(df_sng)
 
         # keep only the selected columns
-        df_sng = df_sng[['isEmptyNet', 'isGoal', 'DistanceToGoal', 'ShootingAngle', 'Team']]
+        df_sng = df_sng[['DistanceToGoal', 'ShootingAngle', 'Team']]
 
         return df_sng
 
