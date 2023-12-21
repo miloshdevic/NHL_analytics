@@ -48,19 +48,20 @@ WORKDIR /code
 ## TODO: add code, optionally a default model if you want 
 # copy files into container
 COPY /ift6758 .
-COPY /ift6758/requirements.txt .
+COPY /ift6758/requirements.txt /code/requirements.txt
 COPY /serving/app.py .
+# COPY /ift6758/COMET_API_KEY /code/COMET_API_KEY
 
 # Comet API key as Environment variables
-ENV COMET_API_KEY cX0b8GkNwZ3M1Bzj4d2oeqFmd
+ENV COMET_API_KEY=cX0b8GkNwZ3M1Bzj4d2oeqFmd
+# ENV COMET_API_KEY=$COMET_API_KEY
 
 
 ## TODO: install libs
 # upgrade pip
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-RUN pip install -r /ift6758/requirements.txt
-RUN pip install xgboost
+RUN pip install -r /code/requirements.txt
 
 
 

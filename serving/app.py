@@ -28,7 +28,8 @@ app = Flask(__name__)
 # MODIFY NAME OF MODEL TO BE DOWNLOADED HERE
 model = None  # "logistic_regression_distance_to_goal.pkl"
 current_model = None
-COMET_API_KEY = os.environ.get("COMET_API_KEY")
+# COMET_API_KEY = os.environ.get("COMET_API_KEY")
+COMET_API_KEY = API(api_key="cX0b8GkNwZ3M1Bzj4d2oeqFmd")
 
 
 # Placeholder for the loaded model
@@ -52,8 +53,8 @@ def before_first_request():
     # basic logging configuration
     logging.basicConfig(filename=LOG_FILE, level=logging.INFO)
 
-    with open('COMET_API_KEY', 'r') as f:
-       COMET_API_KEY = f.read()
+    # with open('COMET_API_KEY', 'r') as f:
+    #    COMET_API_KEY = f.read()
 
     # TODO: any other initialization before the first request (e.g. load default model)
     # TODO: Load your default model here using joblib or any other method
@@ -109,8 +110,8 @@ def download_registry_model():
 
     global model, current_model, model_downloaded, COMET_API_KEY
 
-    with open('COMET_API_KEY', 'r') as f:
-        COMET_API_KEY = f.read()
+    # with open('COMET_API_KEY', 'r') as f:
+    #     COMET_API_KEY = f.read()
 
     model = "logistic_regression_distance_to_goal.pkl"
     app.logger.info(model)
@@ -128,7 +129,8 @@ def download_registry_model():
         app.logger.info("Model present!")
     else:
         app.logger.info("Model not downloaded yet, downloading it now...")
-        api = API(str(COMET_API_KEY))
+        # api = API(str(COMET_API_KEY))
+        api = API(api_key="cX0b8GkNwZ3M1Bzj4d2oeqFmd")
         api.download_registry_model(json['workspace'], json['model'], json['version'], output_path="./", expand=True)
         loaded_model = pickle.load(open(f"models/{model}", 'rb'))
 

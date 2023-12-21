@@ -7,12 +7,12 @@ services:
       context: ./
       dockerfile: ./Dockerfile.serving
     # TODO: change tag accordingly
-    image: ift6758/serving:model-ift6758
+    # image: ift6758/serving:model-ift6758
     ports:
      - "8000:8000"
     environment:
-    #  - COMET_API_KEY = cX0b8GkNwZ3M1Bzj4d2oeqFmd
-     - COMET_API_KEY = ${COMET_API_KEY}
+     - COMET_API_KEY=cX0b8GkNwZ3M1Bzj4d2oeqFmd
+    #  - COMET_API_KEY=${COMET_API_KEY}
      
 ###### Uncomment below when you're ready to add the final notebook container to your docker compose
   # streamlit:
