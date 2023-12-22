@@ -53,7 +53,7 @@ COPY /serving/app.py .
 # COPY /ift6758/COMET_API_KEY /code/COMET_API_KEY
 
 # Comet API key as Environment variables
-ENV COMET_API_KEY = cX0b8GkNwZ3M1Bzj4d2oeqFmd
+ENV COMET_API_KEY=cX0b8GkNwZ3M1Bzj4d2oeqFmd
 # ENV COMET_API_KEY=$COMET_API_KEY
 
 
