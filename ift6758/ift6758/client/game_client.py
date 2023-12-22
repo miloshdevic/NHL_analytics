@@ -231,7 +231,6 @@ class GameClient:
         return df_sng
 
     def ping_game(self, game_id: int):
-        live = False
         url_game = f'https://api-web.nhle.com/v1/gamecenter/{int(game_id)}/play-by-play/'
         response = requests.get(url_game)
 
@@ -246,9 +245,14 @@ class GameClient:
         with open(file_name, 'r') as file:
             play_by_play = json.load(file)
 
+        game_state = play_by_play['gameState']
+
         # check if the game is live
-        if play_by_play['gameState'] == 'LIVE':
-            live = True
+        if play_by_play['gameState'] == 'PRE':
+            return None, game_state, None, None, play_by_play['homeTeam']['name']['default'], play_by_play['awayTeam']['name']['default'], None, None
+        elif play_by_play['gameState'] == 'FUT':
+            return (None, game_state, play_by_play['gameDate'], None, play_by_play['homeTeam']['name']['default'],
+                    play_by_play['awayTeam']['name']['default'], None, None)
 
         # feature engineering, clean, transform from json to df
         df_for_pred = self.generate_game_client_df(f'{file_name}')
@@ -289,7 +293,7 @@ class GameClient:
         #
         # df_for_pred = df_for_pred.reset_index().drop('index', axis=1)[previous_idx:]
 
-        return df_for_pred, live, period, timeLeft, home_team, away_team, home_score, away_score
+        return df_for_pred, game_state, period, timeLeft, home_team, away_team, home_score, away_score
 
     def ping_game_bonus(self, game_id: int):
         url_game = f'https://api-web.nhle.com/v1/gamecenter/{int(game_id)}/play-by-play/'
