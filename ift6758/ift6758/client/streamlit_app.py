@@ -121,7 +121,7 @@ with st.container():
                     st.subheader("Data used for predictions:")
                     st.dataframe(df_for_pred)
                 else:
-                    st.write("We have seen all the events for", game_id)
+                    st.write("We have seen all the events for this game so far.")
 
 # Bonus
 with st.container():
