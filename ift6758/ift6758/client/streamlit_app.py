@@ -121,7 +121,10 @@ with st.container():
                     st.subheader("Data used for predictions:")
                     st.dataframe(df_for_pred)
                 else:
-                    st.write("We have seen all the events for this game so far.")
+                    if game_state == 'LIVE':
+                        st.write("We have seen all the events for this game so far.")
+                    else:
+                        st.write("We have seen all the events for this game.")
 
 # Bonus
 with st.container():
