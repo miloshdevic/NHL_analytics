@@ -70,7 +70,7 @@ with st.container():
                 st.write(f"This game will start shortly.")
             else:
 
-                if game_state == 'LIVE':
+                if game_state == 'LIVE' or game_state == "CRIT":
                     st.write(f"Current Score: {home_team} {home_score} - {away_score} {away_team}")
                     st.write(f"Period: {period} - {timeLeft} left")
                 else:
@@ -79,7 +79,7 @@ with st.container():
                 if len(df_for_pred) != 0:
                     y = sc.predict(df_for_pred)
                     y = list(y.values())
-                    y = [1 if value > 0.58 else 0 for value in y] # [round(value) for value in y]  #
+                    y = [round(value, 1) for value in y]
                     df_y = pd.DataFrame(y)
 
                     df_for_pred['xG'] = df_y.values
@@ -107,10 +107,10 @@ with st.container():
                 home_xG = data[str(game_id)]['home_xG']
                 away_xG = data[str(game_id)]['away_xG']
                 cols = st.columns(2)
-                cols[0].metric(label=home_team + ' xG (actual)', value=str(home_xG) + " (" + str(home_score) + ')',
-                               delta=int(home_score) - int(home_xG))
-                cols[1].metric(label=away_team + ' xG (actual)', value=str(away_xG) + " (" + str(away_score) + ')',
-                               delta=int(away_score) - int(away_xG))
+                cols[0].metric(label=home_team + ' xG (actual)', value=str(round(home_xG, 1)) + " (" + str(home_score) + ')',
+                               delta=round(float(home_score) - float(home_xG), 1))
+                cols[1].metric(label=away_team + ' xG (actual)', value=str(round(away_xG)) + " (" + str(away_score) + ')',
+                               delta=round(float(away_score) - float(away_xG), 1))
 
                 with open('tracker.json', 'w') as outfile:
                     json.dump(data, outfile, default=convert_to_python_types)
@@ -121,7 +121,7 @@ with st.container():
                     st.subheader("Data used for predictions:")
                     st.dataframe(df_for_pred)
                 else:
-                    if game_state == 'LIVE':
+                    if game_state == 'LIVE' or game_state == "CRIT":
                         st.write("We have seen all the events for this game so far.")
                     else:
                         st.write("We have seen all the events for this game.")
@@ -131,8 +131,8 @@ with st.container():
     if ping_button:
         df = gc.ping_game_bonus(int(game_id))
 
-        if game_state == "LIVE":
-            st.subheader('Shots and Goals Map (BONUS)')
+        if game_state == "LIVE" or game_state == "CRIT":
+            st.subheader('Map of Shots and Goals')
 
             fig, ax = plt.subplots(figsize=(10, 5), dpi=100)
             img = mpimg.imread("nhl_rink.png")
@@ -142,8 +142,8 @@ with st.container():
             ax.set_ylabel('feet')
             ax.set_title(
                 f"Period: {period} - {timeLeft} left, Current Score: {home_team} {home_score} - {away_score} {away_team}")
-        elif game_state == "FINAL":
-            st.subheader('Shots and Goals Map (BONUS)')
+        elif game_state == "FINAL" or game_state == "OFF":
+            st.subheader('Map of Shots and Goals')
 
             fig, ax = plt.subplots(figsize=(10, 5), dpi=100)
             img = mpimg.imread("nhl_rink.png")
@@ -153,7 +153,7 @@ with st.container():
             ax.set_ylabel('feet')
             ax.set_title(f"The game ended with the final score: {home_team} {home_score} - {away_score} {away_team}")
 
-        if game_state == "LIVE" or game_state == "FINAL":
+        if game_state == "LIVE" or game_state == "FINAL" or game_state == "CRIT" or game_state == "OFF":
 
             try:
                 # Separate shots and goals for each team
