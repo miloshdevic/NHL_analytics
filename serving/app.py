@@ -14,13 +14,11 @@ from pathlib import Path
 import logging
 import numpy as np
 import json
-
 from comet_ml import API
 from flask import Flask, jsonify, request, abort
 import sklearn
 import pandas as pd
 import joblib
-from sklearn.preprocessing import StandardScaler
 
 import ift6758
 
@@ -28,17 +26,10 @@ LOG_FILE = os.environ.get("FLASK_LOG", "flask.log")
 
 app = Flask(__name__)
 
-# MODIFY NAME OF MODEL TO BE DOWNLOADED HERE
-model = None  # "logistic_regression_distance_to_goal.pkl"
-current_model = None
-# COMET_API_KEY = os.environ.get("COMET_API_KEY")
-COMET_API_KEY = API(api_key="cX0b8GkNwZ3M1Bzj4d2oeqFmd")
-
-
-# Placeholder for the loaded model
-# loaded_model = None
-
 # Placeholder for the model download status
+model = None
+current_model = None
+COMET_API_KEY = os.environ.get("COMET_API_KEY")
 model_downloaded = False
 
 
@@ -150,48 +141,6 @@ def download_registry_model():
     app.logger.info(response)
     return jsonify(response)  # response must be json serializable!
 
-    # TODO: if yes, load that model and write to the log about the model change.
-    # eg: app.logger.info(<LOG STRING>)
-    
-    # TODO: if no, try downloading the model: if it succeeds, load that model and write to the log
-    # about the model change. If it fails, write to the log about the failure and keep the 
-    # currently loaded model
-
-    # Tip: you can implement a "CometMLClient" similar to your App client to abstract all of this
-    # logic and querying of the CometML servers away to keep it clean here
-
-    # try:
-    #     # Example: Using requests to download the model file
-    #     # TODO: Modify the model_url based on your model registry setup
-    #     model_url = f"https://comet-ml/models/{json['workspace']}/{json['model']}/{json['version']}/download"
-    #     response = request.get(model_url)
-    #     response.raise_for_status()
-    #
-    #     # Save the downloaded model
-    #     with open("downloaded_model.pkl", "wb") as model_file:
-    #         model_file.write(response.content)
-    #
-    #     # Load the downloaded model
-    #     loaded_model = joblib.load("downloaded_model.pkl")
-    #
-    #     # Update the model download status
-    #     model_downloaded = True
-    #
-    #     app.logger.info("Model downloaded and loaded successfully.")
-    #     return jsonify({"status": "Model downloaded and loaded successfully"})
-    #
-    # except Exception as e:
-    #     # Log the failure and keep the currently loaded model
-    #     app.logger.error(f"Failed to download model. Error: {str(e)}")
-    #     return jsonify({"error": f"Failed to download model. Error: {str(e)}"})
-
-    # raise NotImplementedError("TODO: implement this endpoint")
-    #
-    # response = None
-    #
-    # app.logger.info(response)
-    # return jsonify(response)  # response must be json serializable!
-
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -201,23 +150,10 @@ def predict():
     Returns predictions
     """
     # Get POST json data
-
-    # global current_model
-
     json = request.get_json()
     app.logger.info(json)
 
-    # TODO:
-    # if loaded_model is None:
-    #     return jsonify({"error": "Model not loaded. Please load or download a model first."})
-
-    # OG SECTION
-    # X = pd.DataFrame.from_dict(json)
-    #
-    # # TODO: Preprocess input data if needed (convert to DataFrame, etc.)
-    # input_data = pd.DataFrame(X)  # pd.DataFrame.from_dict(json, orient="index").transpose()
-    # response = pd.Series(model.predict_proba(input_data)[:, 1])
-    # return response.to_json()  # response must be json serializable!
+    # global current_model
 
     X = pd.DataFrame.from_dict(json) # pd.read_json(json.dumps(json), orient='records')
 
@@ -236,25 +172,4 @@ def predict():
 
     predictions = pd.Series(model.predict_proba(X)[:, 1])
 
-    # result = {'predictions': predictions.tolist()}
-    # print(result)
-    # r = result.to_json()
-    # print(r)
-    # predictions = predictions.tolist()
-    return predictions.to_json() # jsonify(result)
-
-    # TODO: Perform predictions using the loaded model
-    # Example:
-    # predictions = model.predict_proba(X)[:,1]
-    #
-    # response = pd.DataFrame(predictions).to_json()
-
-    # response = {"predictions": predictions}  # Update with actual predictions
-
-    # logging.info(f'Number of predictions made: {predictions.shape[0]}')
-    # unique, counts = np.unique(predictions, return_counts=True)
-    # goal_percentage = counts[1] / predictions.shape[0]
-    # logging.info(f'Goal percentage: {goal_percentage}, Number of Goals: {counts[1]}')
-
-    # app.logger.info(response)
-    # return response.to_json()  # response must be json serializable!
+    return predictions.to_json()

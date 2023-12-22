@@ -61,15 +61,16 @@ ENV COMET_API_KEY=cX0b8GkNwZ3M1Bzj4d2oeqFmd
 # upgrade pip
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-RUN pip install -r /code/requirements.txt
+# RUN pip install -r /ift6758/requirements.txt
+RUN pip install xgboost
 
 
 
 ## TODO: expose ports (or do this in docker-compose)
-EXPOSE 8000
+EXPOSE 4000
 
 
 ## TODO: specify default command - this is not required because you can always specify the command
 ## either with the docker run command or in the docker-compose file
 # Default command to start the Flask app with waitress.
-CMD ["gunicorn","--bind=0.0.0.0:8000","app:app"]
+CMD ["gunicorn","--bind=0.0.0.0:4000","app:app"]

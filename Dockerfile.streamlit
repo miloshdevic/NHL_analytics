@@ -60,7 +60,7 @@ COPY streamlit_app.py .
 
 # TODO: install libs
 RUN pip install --upgrade pip
-RUN pip install -r /ift6758/requirements.txt .
+# RUN pip install -r /ift6758/requirements.txt .
 RUN pip install -r requirements.txt
 # Environment variable for API key
 ENV COMET_API_KEY cX0b8GkNwZ3M1Bzj4d2oeqFmd

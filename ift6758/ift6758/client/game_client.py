@@ -4,18 +4,11 @@ import requests
 import json
 import os
 import logging
-# from feature_extraction import *
 
 logger = logging.getLogger(__name__)
 
-# tracker file to not repeat events
-with open('tracker.json', 'w') as outfile:
-    data = {}
-    json.dump(data, outfile)
-
 class GameClient:
     def __init__(self):
-        self.processed_events = set()
         self.tracker = self.load_tracker()
         logger.info(f"Initializing ClientGame; base URL: ")
 
@@ -24,6 +17,10 @@ class GameClient:
             with open('tracker.json', 'r') as tracker_file:
                 return json.load(tracker_file)
         except FileNotFoundError:
+            # If tracker file doesn't exist, create it
+            with open('tracker.json', 'w') as outfile:
+                data = {}
+                json.dump(data, outfile)
             return {}
 
     # returns the opposite of left or right
@@ -54,7 +51,6 @@ class GameClient:
         strength = []
         rinkSide = []
         season = []
-        last_ping = []
         s = play_by_play['season']
         id = play_by_play['id']
 
@@ -121,9 +117,6 @@ class GameClient:
                 strength.append('')
                 isEmptyNet.append(0)
 
-            last_ping.append('')
-        last_ping[-1] = 'ping'
-
         # Create a DataFrame from the extracted information
         df = pd.DataFrame({
             'GameTime': game_time,
@@ -139,8 +132,7 @@ class GameClient:
             'isEmptyNet': isEmptyNet,
             'Strength': strength,
             'RinkSide': rinkSide,
-            'Season': season,
-            'LastPing': last_ping
+            'Season': season
         })
 
         return df
@@ -228,8 +220,18 @@ class GameClient:
 
         return df_sng
 
+    def generate_bonus_df(self, file_path) -> pd.DataFrame:
+        with open(file_path, 'r') as file:
+            play_by_play = json.load(file)
+        df = self.extract_features(play_by_play)
+
+        # keep only shots and goals
+        df_sng = df[df['Event'].isin(['shot-on-goal', 'goal'])]
+
+        return df_sng
+
     def ping_game(self, game_id: int):
-        live = True
+        live = False
         url_game = f'https://api-web.nhle.com/v1/gamecenter/{int(game_id)}/play-by-play/'
         response = requests.get(url_game)
 
@@ -245,14 +247,13 @@ class GameClient:
             play_by_play = json.load(file)
 
         # check if the game is live
-        if play_by_play['gameState'] == 'OFF':
-            live = False
+        if play_by_play['gameState'] == 'LIVE':
+            live = True
 
         # feature engineering, clean, transform from json to df
         df_for_pred = self.generate_game_client_df(f'{file_name}')
         df = self.extract_features(play_by_play)
         last_row = df.tail(1)
-        ping = last_row['LastPing'].values[0]
 
         period = last_row['Period'].values[0]
         timeLeft = last_row['TimeLeft'].values[0]
@@ -261,43 +262,64 @@ class GameClient:
         home_score = play_by_play['homeTeam']['score']
         away_score = play_by_play['awayTeam']['score']
 
-        # t = open('tracker.json')
-        # tracker = json.load(t)
-        # previous_idx = 0
-        # if game_id in tracker:
-        #     previous_idx = tracker[str(game_id)]['idx']
-        #     tracker[str(game_id)]['idx'] = len(df_for_pred)
-        # else:
-        #     tracker[str(game_id)] = {}
-        #     tracker[str(game_id)]['idx'] = len(df_for_pred)
-        # with open('tracker.json', 'w') as outfile:
-        #     json.dump(tracker, outfile)
-        # df_for_pred = df_for_pred.reset_index().drop('index', axis=1)[previous_idx:]
+        with open('tracker.json', 'r') as t:
+            tracker = json.load(t)
 
         previous_idx = 0
-        if game_id in self.tracker:
-            previous_idx = self.tracker[str(game_id)].get('idx', 0)
-            self.tracker[str(game_id)]['idx'] = len(df_for_pred)
+        if str(game_id) in tracker:
+            previous_idx = tracker.get(str(game_id), {}).get("idx") # [str(game_id)]['idx']
+            tracker[str(game_id)]['idx'] = len(df_for_pred)
         else:
-            self.tracker[str(game_id)] = {'idx': len(df_for_pred)}
-
+            tracker[str(game_id)] = {}
+            tracker[str(game_id)]['idx'] = len(df_for_pred)
         with open('tracker.json', 'w') as outfile:
-            json.dump(self.tracker, outfile)
+            json.dump(tracker, outfile)
 
         df_for_pred = df_for_pred.reset_index().drop('index', axis=1)[previous_idx:]
 
+        # previous_idx = 0
+        # if game_id in self.tracker:
+        #     previous_idx = self.tracker[str(game_id)].get('idx', 0)
+        #     self.tracker[str(game_id)]['idx'] = len(df_for_pred)
+        # else:
+        #     self.tracker[str(game_id)] = {'idx': len(df_for_pred)}
+        #
+        # with open('tracker.json', 'w') as outfile:
+        #     json.dump(self.tracker, outfile)
+        #
+        # df_for_pred = df_for_pred.reset_index().drop('index', axis=1)[previous_idx:]
+
         return df_for_pred, live, period, timeLeft, home_team, away_team, home_score, away_score
 
-# Testing
-# game_id_to_test = 2019020003 # 2022020451 #
-# client = GameClient()
-# result_df, live, period, timeLEft, home, away, h_score, a_score = client.ping_game(game_id_to_test)
-#
-# print(result_df)
-# print(live)
-# print(period)
-# print(timeLEft)
-# print(home)
-# print(away)
-# print(h_score)
-# print(a_score)
+    def ping_game_bonus(self, game_id: int):
+        url_game = f'https://api-web.nhle.com/v1/gamecenter/{int(game_id)}/play-by-play/'
+        response = requests.get(url_game)
+
+        id = str(game_id)
+
+        file_name = f'nhl_play_by_play_{id[:4]}_{game_id}.json'
+
+        data = response.json()
+        with open(file_name, 'w') as file:
+            json.dump(data, file)
+
+        with open(file_name, 'r') as file:
+            play_by_play = json.load(file)
+
+        # feature engineering, clean, transform from json to df
+        df_for_pred = self.generate_game_client_df(f'{file_name}')
+        df = self.extract_features(play_by_play)
+
+        # previous_idx = 0
+        # if game_id in self.tracker:
+        #     previous_idx = self.tracker[str(game_id)].get('idx', 0)
+        #     self.tracker[str(game_id)]['idx'] = len(df_for_pred)
+        # else:
+        #     self.tracker[str(game_id)] = {'idx': len(df_for_pred)}
+        #
+        # with open('tracker.json', 'w') as outfile:
+        #     json.dump(self.tracker, outfile)
+        #
+        # df_for_pred = df_for_pred.reset_index().drop('index', axis=1)[previous_idx:]
+
+        return df
