@@ -201,5 +201,5 @@ with st.container():
                 "distinguish between shots and goals from the home and away teams. The technical challenge involved conditional "
                 "data manipulation and thoughtful coordination of visual elements to create a more informative and engaging map.")
 
-            st.write("We also handle the cases when a game will start shortly (pre-game) and when a game didn't start yet. "
+            st.write("We also handle the cases when a game will start shortly (pre-game) and when a game wasn't played yet. "
                      "In the second case, we indicate when the game is scheduled to be played.")
