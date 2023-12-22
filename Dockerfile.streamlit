@@ -66,9 +66,9 @@ RUN pip install -r requirements.txt
 ENV COMET_API_KEY cX0b8GkNwZ3M1Bzj4d2oeqFmd
 
 # TODO: expose ports (or do this in docker-compose)
-ENV STREAMLIT_PORT=8000
-EXPOSE 8000
+ENV STREAMLIT_PORT=8501
+EXPOSE ${STREAMLIT_PORT}
 
 # TODO: specify default command - this is not required because you can always specify the command
 # either with the docker run command or in the docker-compose file
-CMD ["streamlit","run","app.py","--server.port=8000","--server.address=0.0.0.0"]
+CMD ["streamlit","run","app.py","--server.port=8501","--server.address=0.0.0.0"]
