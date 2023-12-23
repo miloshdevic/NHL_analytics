@@ -228,6 +228,9 @@ class GameClient:
         # keep only shots and goals
         df_sng = df[df['Event'].isin(['shot-on-goal', 'goal'])]
 
+        # add distance and angle columns
+        df_sng = self.add_distance(df_sng)
+
         return df_sng
 
     def ping_game(self, game_id: int):
@@ -311,19 +314,7 @@ class GameClient:
             play_by_play = json.load(file)
 
         # feature engineering, clean, transform from json to df
-        df_for_pred = self.generate_game_client_df(f'{file_name}')
-        df = self.extract_features(play_by_play)
+        df_for_pred = self.generate_bonus_df(f'{file_name}')
+        # df = self.extract_features(play_by_play)
 
-        # previous_idx = 0
-        # if game_id in self.tracker:
-        #     previous_idx = self.tracker[str(game_id)].get('idx', 0)
-        #     self.tracker[str(game_id)]['idx'] = len(df_for_pred)
-        # else:
-        #     self.tracker[str(game_id)] = {'idx': len(df_for_pred)}
-        #
-        # with open('tracker.json', 'w') as outfile:
-        #     json.dump(self.tracker, outfile)
-        #
-        # df_for_pred = df_for_pred.reset_index().drop('index', axis=1)[previous_idx:]
-
-        return df
+        return df_for_pred

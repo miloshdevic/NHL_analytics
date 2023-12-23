@@ -165,19 +165,17 @@ with st.container():
                 home_goals = df[(df['Event'] == 'goal') & (df['Team'] == home_team)]
                 away_goals = df[(df['Event'] == 'goal') & (df['Team'] == away_team)]
 
-                # Change the sign of positive XCoord values for the home team
+                # Change the sign of positive XCoord values for the home team and flip the corresponding YCoord value
+                home_shots.loc[home_shots['XCoord'] > 0, 'YCoord'] *= -1
                 home_shots.loc[home_shots['XCoord'] > 0, 'XCoord'] *= -1
-                home_goals.loc[home_goals['XCoord'] > 0, 'XCoord'] *= -1
+                home_goals.loc[(home_goals['XCoord'] > 0) & (home_goals['DistanceToGoal'] < 90), 'YCoord'] *= -1
+                home_goals.loc[(home_goals['XCoord'] > 0) & (home_goals['DistanceToGoal'] < 90), 'XCoord'] *= -1
 
-                # Change the sign of negative XCoord values for the away team
+                # Change the sign of negative XCoord values for the away team and flip the corresponding YCoord value
+                away_shots.loc[away_shots['XCoord'] < 0, 'YCoord'] *= -1
                 away_shots.loc[away_shots['XCoord'] < 0, 'XCoord'] *= -1
-                away_goals.loc[away_goals['XCoord'] < 0, 'XCoord'] *= -1
-
-                # Flip the sign of YCoord for the coordinates that have been changed
-                home_shots.loc[home_shots['XCoord'] < 0, 'YCoord'] *= -1
-                home_goals.loc[home_goals['XCoord'] < 0, 'YCoord'] *= -1
-                away_shots.loc[away_shots['XCoord'] > 0, 'YCoord'] *= -1
-                away_goals.loc[away_goals['XCoord'] > 0, 'YCoord'] *= -1
+                away_goals.loc[(away_goals['XCoord'] < 0) & (away_goals['DistanceToGoal'] < 90), 'YCoord'] *= -1
+                away_goals.loc[(away_goals['XCoord'] < 0) & (away_goals['DistanceToGoal'] < 90), 'XCoord'] *= -1
 
                 # Plot shots and goals with different colors for each team
                 ax.scatter(home_shots['XCoord'], home_shots['YCoord'], marker='o', color='blue', label=f'{home_team} Shots')
@@ -197,11 +195,13 @@ with st.container():
             st.write(
                 "In this version of the Shots and Goals Map, we've introduced team-specific coordinates to provide a clearer "
                 "visualization of shots and goals for each team. Positive X coordinates for the home team have been transformed "
-                "to negative, and negative X coordinates for the away team have been transformed to positive. Additionally, the "
-                "Y coordinates corresponding to the changed X coordinates have been flipped, ensuring a consistent representation "
-                "of the rink for both teams. This enhancement improves the interpretability of the map, allowing users to easily "
-                "distinguish between shots and goals from the home and away teams. The technical challenge involved conditional "
-                "data manipulation and thoughtful coordination of visual elements to create a more informative and engaging map.")
+                "to negative, and negative X coordinates for the away team have been transformed to positive, if their distances "
+                "to the goal are less than 90. This ensures that empty net goals are correctly placed (it happens often "
+                "that they are scored from the team's defensive zone. Additionally, the Y coordinates corresponding to the "
+                "changed X coordinates have been flipped, ensuring a consistent representation of the rink for both teams. "
+                "This enhancement improves the interpretability of the map, allowing users to easily distinguish between "
+                "shots and goals from the home and away teams. The technical challenge involved conditional data "
+                "manipulation and thoughtful coordination of visual elements to create a more informative and engaging map.")
 
             st.write("We also handle the cases when a game will start shortly (pre-game) and when a game wasn't played yet. "
                      "In the second case, we indicate when the game is scheduled to be played.")
