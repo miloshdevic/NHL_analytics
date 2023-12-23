@@ -197,7 +197,7 @@ with st.container():
                 "visualization of shots and goals for each team. Positive X coordinates for the home team have been transformed "
                 "to negative, and negative X coordinates for the away team have been transformed to positive, if their distances "
                 "to the goal are less than 90. This ensures that empty net goals are correctly placed (it happens often "
-                "that they are scored from the team's defensive zone. Additionally, the Y coordinates corresponding to the "
+                "that they are scored from the team's defensive zone). Additionally, the Y coordinates corresponding to the "
                 "changed X coordinates have been flipped, ensuring a consistent representation of the rink for both teams. "
                 "This enhancement improves the interpretability of the map, allowing users to easily distinguish between "
                 "shots and goals from the home and away teams. The technical challenge involved conditional data "
