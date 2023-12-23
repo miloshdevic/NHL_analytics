@@ -47,27 +47,19 @@ def before_first_request():
     # basic logging configuration
     logging.basicConfig(filename=LOG_FILE, level=logging.INFO)
 
-    # with open('COMET_API_KEY', 'r') as f:
-    #    COMET_API_KEY = f.read()
+    with open('COMET_API_KEY', 'r') as f:
+       COMET_API_KEY = f.read()
 
-    # TODO: any other initialization before the first request (e.g. load default model)
-    # TODO: Load your default model here using joblib or any other method
-    # Replace the following line with your model loading logic
-    # api = API(str(COMET_API_KEY))
-    api = API(api_key="cX0b8GkNwZ3M1Bzj4d2oeqFmd")
-    # api = API(api_key=str(COMET_API_KEY))
+    # initialization before the first request (e.g. load default model)
+    # Load your default model here using joblib or any other method
+    api = API(api_key=str(COMET_API_KEY))
     api.download_registry_model("nhl-analytics-milestone-2", "logisticregressiondistancetogoal",
                                 "1.1.0", output_path="comet_models/", expand=True)
     model = pickle.load(open('comet_models/LogisticRegressionDistanceToGoal.pkl', 'rb'))
-    # model = joblib.load("models/logistic_regression_distance_to_goal.pkl")
     app.logger.info('\nDefault model downloaded from Comet!\n')
 
 
 before_first_request()
-
-# @app.route("/", methods=["GET"])
-# def index():
-#     return jsonify({"message": "Welcome to the Flask app!"})
 
 
 @app.route("/logs", methods=["GET"])
@@ -104,8 +96,8 @@ def download_registry_model():
 
     global model, current_model, model_downloaded, COMET_API_KEY
 
-    # with open('COMET_API_KEY', 'r') as f:
-    #     COMET_API_KEY = f.read()
+    with open('COMET_API_KEY', 'r') as f:
+        COMET_API_KEY = f.read()
 
     model_name = ""
     current_model = json['model']
@@ -155,20 +147,14 @@ def predict():
 
     # global current_model
 
-    X = pd.DataFrame.from_dict(json) # pd.read_json(json.dumps(json), orient='records')
+    X = pd.DataFrame.from_dict(json)
 
     if current_model == 'logisticregressiondistancetogoal':
         X = X[['DistanceToGoal']].to_numpy()
-        # X[['DistanceToGoal']] = StandardScaler().fit_transform(X[['DistanceToGoal']])
-        # X = X.to_numpy()
     elif current_model == 'logisticregressionshootingangle':
         X = X[['ShootingAngle']].to_numpy()
-        # X[['ShootingAngle']] = StandardScaler().fit_transform(X[['ShootingAngle']])
-        # X = X.to_numpy()
     elif current_model == 'logisticregressiondistancetogoal_shootingangle':
         X = X[['DistanceToGoal', 'ShootingAngle']].to_numpy()
-        # X[['DistanceToGoal', 'ShootingAngle']] = StandardScaler().fit_transform(X[['DistanceToGoal', 'ShootingAngle']])
-        # X = X.to_numpy()
 
     predictions = pd.Series(model.predict_proba(X)[:, 1])
 

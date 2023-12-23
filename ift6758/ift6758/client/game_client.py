@@ -269,32 +269,18 @@ class GameClient:
         home_score = play_by_play['homeTeam']['score']
         away_score = play_by_play['awayTeam']['score']
 
-        with open('tracker.json', 'r') as t:
-            tracker = json.load(t)
-
         previous_idx = 0
-        if str(game_id) in tracker:
-            previous_idx = tracker.get(str(game_id), {}).get("idx") # [str(game_id)]['idx']
-            tracker[str(game_id)]['idx'] = len(df_for_pred)
+        if str(game_id) in self.tracker:
+            previous_idx = self.tracker.get(str(game_id), {}).get("idx")
+            self.tracker[str(game_id)]['idx'] = len(df_for_pred)
         else:
-            tracker[str(game_id)] = {}
-            tracker[str(game_id)]['idx'] = len(df_for_pred)
+            self.tracker[str(game_id)] = {}
+            self.tracker[str(game_id)]['idx'] = len(df_for_pred)
+
         with open('tracker.json', 'w') as outfile:
-            json.dump(tracker, outfile)
+            json.dump(self.tracker, outfile)
 
         df_for_pred = df_for_pred.reset_index().drop('index', axis=1)[previous_idx:]
-
-        # previous_idx = 0
-        # if game_id in self.tracker:
-        #     previous_idx = self.tracker[str(game_id)].get('idx', 0)
-        #     self.tracker[str(game_id)]['idx'] = len(df_for_pred)
-        # else:
-        #     self.tracker[str(game_id)] = {'idx': len(df_for_pred)}
-        #
-        # with open('tracker.json', 'w') as outfile:
-        #     json.dump(self.tracker, outfile)
-        #
-        # df_for_pred = df_for_pred.reset_index().drop('index', axis=1)[previous_idx:]
 
         return df_for_pred, game_state, period, timeLeft, home_team, away_team, home_score, away_score
 
@@ -315,6 +301,5 @@ class GameClient:
 
         # feature engineering, clean, transform from json to df
         df_for_pred = self.generate_bonus_df(f'{file_name}')
-        # df = self.extract_features(play_by_play)
 
         return df_for_pred

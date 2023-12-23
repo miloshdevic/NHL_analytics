@@ -27,15 +27,6 @@ class ServingClient:
         Args:
             X (Dataframe): Input dataframe to submit to the prediction service.
         """
-        # logger.info(f"Intializing POST request predictions, query the predictions")
-        # json_data = json.loads(X.to_json())
-        # response = requests.post(f"{self.base_url}/predict", json=json_data)
-        # logger.info(f"Query the predictions with success")
-        # body = response.json()
-        # df = pd.DataFrame.from_records(body)
-        # return df
-        # X = X[['DistanceToGoal', 'ShootingAngle']]
-        # X[['DistanceToGoal', 'ShootingAngle']] = StandardScaler().fit_transform(X[['DistanceToGoal', 'ShootingAngle']])
         json_data = json.loads(X.to_json())
         request = requests.post(
             f"{self.base_url}/predict",
@@ -68,12 +59,6 @@ class ServingClient:
             model (str): The model in the Comet ML registry to download
             version (str): The model version to download
         """
-
-        # logger.info(f"Initializing request to download the comet model")
-        # request_dict = {"workspace": workspace, "model": model, "version": version}
-        # data = json.dumps(request_dict)
-        # response = requests.post(f"{self.base_url}/download_registry_model",json=data)
-        # return response.json()
         response = requests.post(self.base_url + '/download_registry_model',
                                  json={'workspace': workspace, 'model': model, 'version': version})
         logger.info("SUCCESS: Model downloaded!")
