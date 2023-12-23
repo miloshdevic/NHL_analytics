@@ -79,7 +79,7 @@ with st.container():
                 if len(df_for_pred) != 0:
                     y = sc.predict(df_for_pred)
                     y = list(y.values())
-                    y = [round(value, 1) for value in y]
+                    # y = [round(value, 1) for value in y]
                     df_y = pd.DataFrame(y)
 
                     df_for_pred['xG'] = df_y.values
@@ -89,12 +89,14 @@ with st.container():
 
                     # different columns kept depending on the model
                     if model == "logisticregressiondistancetogoal":
-                        df_for_pred = df_for_pred[['DistanceToGoal', 'Team']]
+                        df_for_pred = df_for_pred[['DistanceToGoal', 'Team', 'xG']]
                     elif model == "logisticregressionshootingangle":
-                        df_for_pred = df_for_pred[['ShootingAngle', 'Team']]
+                        df_for_pred = df_for_pred[['ShootingAngle', 'Team', 'xG']]
+                    else:
+                        df_for_pred = df_for_pred[['DistanceToGoal', 'ShootingAngle', 'Team', 'xG']]
 
-                f = open('tracker.json')
-                data = json.load(f)
+                tracker = open('tracker.json')
+                data = json.load(tracker)
                 if 'home_xG' in data[str(game_id)]: # str(game_id) in data: #
                     temp_home_xG = data[str(game_id)]['home_xG']
                     temp_away_xG = data[str(game_id)]['away_xG']

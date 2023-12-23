@@ -55,8 +55,8 @@ class GameClient:
         id = play_by_play['id']
 
         for event in play_by_play['plays']:
-            if event['periodDescriptor']['periodType'] == "SO":
-                continue
+            # if event['periodDescriptor']['periodType'] == "SO":
+            #     continue
             game_id_list.append(id)
             season.append(s)
             if 'eventOwnerTeamId' in event:
