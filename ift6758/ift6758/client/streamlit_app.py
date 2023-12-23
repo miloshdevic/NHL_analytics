@@ -109,7 +109,7 @@ with st.container():
                 cols = st.columns(2)
                 cols[0].metric(label=home_team + ' xG (actual)', value=str(round(home_xG, 1)) + " (" + str(home_score) + ')',
                                delta=round(float(home_score) - float(home_xG), 1))
-                cols[1].metric(label=away_team + ' xG (actual)', value=str(round(away_xG)) + " (" + str(away_score) + ')',
+                cols[1].metric(label=away_team + ' xG (actual)', value=str(round(away_xG, 1)) + " (" + str(away_score) + ')',
                                delta=round(float(away_score) - float(away_xG), 1))
 
                 with open('tracker.json', 'w') as outfile:
