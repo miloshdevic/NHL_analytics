@@ -3,7 +3,7 @@ title:               IFT6758 Blog B-14
 tagline:             'A template based on the Lanyon Jekyll theme'
 description:         'Here we present our analysis of the NHL data analysis project for IFT6758.'
 url:                 'https://miloshdevic.github.io'
-baseurl:             '/NHL_analytics'
+baseurl:             ''
 paginate:            5
 permalink:           pretty
 
