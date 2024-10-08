@@ -155,15 +155,15 @@ It is worth noting that for all the shot types, the closer they are to the net, 
 Here are the interactive shot maps for the NHL teams for 5 different seasons. At the beginning, all the teams' shot maps are displayed together. Once you select a team, only their shot map will be displayed.
 
 
-[2016-2017 Season NHL shot maps]({% link shotMaps/2016-2017_season_nhl_shot_map.html %}){:target="_blank"}
+[2016-2017 Season NHL shot maps]({% link 2016-2017_season_nhl_shot_map.html %}){:target="_blank"}
 
-[2017-2018 Season NHL shot maps]({% link shotMaps/2017-2018_season_nhl_shot_map.html %}){:target="_blank"}
+[2017-2018 Season NHL shot maps]({% link 2017-2018_season_nhl_shot_map.html %}){:target="_blank"}
 
-[2018-2019 Season NHL shot maps]({% link shotMaps/2018-2019_season_nhl_shot_map.html %}){:target="_blank"}
+[2018-2019 Season NHL shot maps]({% link 2018-2019_season_nhl_shot_map.html %}){:target="_blank"}
 
-[2019-2020 Season NHL shot maps]({% link shotMaps/2019-2020_season_nhl_shot_map.html %}){:target="_blank"}
+[2019-2020 Season NHL shot maps]({% link 2019-2020_season_nhl_shot_map.html %}){:target="_blank"}
 
-[2020-2021 Season NHL shot maps]({% link shotMaps/2020-2021_season_nhl_shot_map.html %}){:target="_blank"}
+[2020-2021 Season NHL shot maps]({% link 2020-2021_season_nhl_shot_map.html %}){:target="_blank"}
 
 
 ### Question 2

@@ -42,3 +42,169 @@ INFO:app:{'DistanceToGoal': {'0': 54.0, '1': 37.0, '2': 48.0, '3': 8.0, '4': 22.
 INFO:app:{'DistanceToGoal': {'0': 33.0, '1': 40.0, '2': 12.0, '3': 22.0, '4': 28.0, '5': 42.0, '6': 57.0, '7': 16.0, '8': 34.0, '9': 16.0, '10': 30.0, '11': 39.0, '12': 13.0, '13': 41.0, '14': 52.0, '15': 57.0, '16': 60.0, '17': 81.0, '18': 60.0, '19': 13.0, '20': 47.0, '21': 55.0, '22': 23.0, '23': 27.0, '24': 57.0, '25': 45.0, '26': 21.0, '27': 15.0, '28': 38.0, '29': 55.0, '30': 11.0, '31': 33.0, '32': 135.0, '33': 7.0, '34': 70.0, '35': 51.0, '36': 44.0, '37': 40.0, '38': 80.0, '39': 42.0, '40': 12.0, '41': 44.0, '42': 35.0, '43': 12.0, '44': 14.0, '45': 57.0, '46': 35.0, '47': 30.0, '48': 12.0}, 'ShootingAngle': {'0': -43.0, '1': -35.0, '2': -66.0, '3': -30.0, '4': 10.0, '5': -22.0, '6': -77.0, '7': -38.0, '8': 71.0, '9': 75.0, '10': 56.0, '11': 81.0, '12': -29.0, '13': 84.0, '14': 64.0, '15': 56.0, '16': 69.0, '17': -67.0, '18': 58.0, '19': 48.0, '20': -83.0, '21': 89.0, '22': -23.0, '23': -45.0, '24': 47.0, '25': 29.0, '26': 61.0, '27': -20.0, '28': 81.0, '29': -66.0, '30': 15.0, '31': 31.0, '32': 75.0, '33': 45.0, '34': 56.0, '35': 0.0, '36': 62.0, '37': 56.0, '38': 61.0, '39': -57.0, '40': 85.0, '41': 0.0, '42': 39.0, '43': -59.0, '44': 45.0, '45': -66.0, '46': -5.0, '47': -57.0, '48': -48.0}, 'Team': {'0': 'Wild', '1': 'Canadiens', '2': 'Wild', '3': 'Wild', '4': 'Wild', '5': 'Canadiens', '6': 'Wild', '7': 'Wild', '8': 'Canadiens', '9': 'Wild', '10': 'Wild', '11': 'Wild', '12': 'Wild', '13': 'Wild', '14': 'Wild', '15': 'Wild', '16': 'Canadiens', '17': 'Canadiens', '18': 'Canadiens', '19': 'Canadiens', '20': 'Canadiens', '21': 'Canadiens', '22': 'Canadiens', '23': 'Canadiens', '24': 'Wild', '25': 'Canadiens', '26': 'Wild', '27': 'Wild', '28': 'Canadiens', '29': 'Wild', '30': 'Canadiens', '31': 'Canadiens', '32': 'Wild', '33': 'Canadiens', '34': 'Canadiens', '35': 'Wild', '36': 'Canadiens', '37': 'Canadiens', '38': 'Canadiens', '39': 'Wild', '40': 'Wild', '41': 'Canadiens', '42': 'Canadiens', '43': 'Canadiens', '44': 'Wild', '45': 'Wild', '46': 'Canadiens', '47': 'Canadiens', '48': 'Wild'}}
 INFO:app:{'DistanceToGoal': {'0': 34.0, '1': 42.0, '2': 57.0, '3': 49.0, '4': 59.0, '5': 43.0, '6': 21.0, '7': 34.0, '8': 24.0, '9': 8.0, '10': 47.0, '11': 35.0, '12': 25.0, '13': 13.0, '14': 8.0, '15': 22.0, '16': 21.0, '17': 43.0, '18': 59.0, '19': 32.0, '20': 53.0, '21': 24.0, '22': 9.0, '23': 42.0, '24': 172.0, '25': 18.0, '26': 49.0, '27': 24.0, '28': 33.0, '29': 15.0, '30': 43.0, '31': 41.0, '32': 10.0, '33': 44.0, '34': 23.0, '35': 19.0, '36': 21.0, '37': 7.0, '38': 5.0, '39': 7.0, '40': 38.0, '41': 9.0}, 'ShootingAngle': {'0': 40.0, '1': -27.0, '2': 56.0, '3': 81.0, '4': -89.0, '5': -48.0, '6': 73.0, '7': 58.0, '8': 81.0, '9': 23.0, '10': -83.0, '11': -37.0, '12': -63.0, '13': -13.0, '14': 40.0, '15': 58.0, '16': -29.0, '17': 41.0, '18': 48.0, '19': 49.0, '20': -87.0, '21': -33.0, '22': -32.0, '23': -47.0, '24': -78.0, '25': -9.0, '26': 78.0, '27': 30.0, '28': -69.0, '29': 79.0, '30': 50.0, '31': 29.0, '32': 37.0, '33': -31.0, '34': 88.0, '35': -39.0, '36': 67.0, '37': -74.0, '38': -79.0, '39': 56.0, '40': -48.0, '41': -27.0}, 'Team': {'0': 'Flames', '1': 'Flames', '2': 'Ducks', '3': 'Ducks', '4': 'Flames', '5': 'Ducks', '6': 'Flames', '7': 'Flames', '8': 'Flames', '9': 'Flames', '10': 'Ducks', '11': 'Ducks', '12': 'Ducks', '13': 'Flames', '14': 'Flames', '15': 'Flames', '16': 'Flames', '17': 'Ducks', '18': 'Ducks', '19': 'Ducks', '20': 'Ducks', '21': 'Ducks', '22': 'Flames', '23': 'Ducks', '24': 'Ducks', '25': 'Flames', '26': 'Flames', '27': 'Flames', '28': 'Flames', '29': 'Flames', '30': 'Flames', '31': 'Flames', '32': 'Ducks', '33': 'Ducks', '34': 'Flames', '35': 'Ducks', '36': 'Ducks', '37': 'Ducks', '38': 'Ducks', '39': 'Ducks', '40': 'Flames', '41': 'Flames'}}
 INFO:app:{'DistanceToGoal': {'0': 42.0, '1': 41.0, '2': 21.0, '3': 61.0, '4': 39.0, '5': 12.0, '6': 14.0, '7': 33.0, '8': 12.0, '9': 46.0, '10': 60.0, '11': 11.0, '12': 36.0, '13': 4.0, '14': 57.0, '15': 64.0, '16': 14.0, '17': 7.0, '18': 13.0}, 'ShootingAngle': {'0': 60.0, '1': -87.0, '2': 85.0, '3': 86.0, '4': 44.0, '5': -48.0, '6': -65.0, '7': -52.0, '8': -24.0, '9': 71.0, '10': 71.0, '11': -41.0, '12': -46.0, '13': 63.0, '14': 85.0, '15': 69.0, '16': -21.0, '17': -45.0, '18': 0.0}, 'Team': {'0': 'Coyotes', '1': 'Sharks', '2': 'Sharks', '3': 'Coyotes', '4': 'Coyotes', '5': 'Sharks', '6': 'Coyotes', '7': 'Coyotes', '8': 'Coyotes', '9': 'Sharks', '10': 'Sharks', '11': 'Coyotes', '12': 'Sharks', '13': 'Sharks', '14': 'Sharks', '15': 'Sharks', '16': 'Sharks', '17': 'Sharks', '18': 'Sharks'}}
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:{'DistanceToGoal': {'0': 5.0, '1': 4.0, '2': 58.0, '3': 12.0, '4': 6.0, '5': 33.0, '6': 60.0, '7': 10.0, '8': 57.0, '9': 86.0, '10': 18.0, '11': 38.0, '12': 23.0, '13': 58.0, '14': 61.0, '15': 9.0, '16': 12.0, '17': 9.0, '18': 8.0, '19': 13.0, '20': 21.0, '21': 53.0, '22': 7.0, '23': 48.0, '24': 53.0, '25': 33.0, '26': 42.0, '27': 35.0, '28': 48.0, '29': 29.0, '30': 23.0, '31': 15.0, '32': 28.0, '33': 32.0, '34': 6.0, '35': 63.0, '36': 7.0, '37': 19.0, '38': 16.0, '39': 33.0, '40': 39.0, '41': 15.0, '42': 26.0, '43': 82.0, '44': 9.0, '45': 51.0, '46': 40.0, '47': 16.0, '48': 20.0, '49': 34.0, '50': 95.0, '51': 35.0, '52': 9.0, '53': 13.0, '54': 62.0, '55': 13.0, '56': 10.0, '57': 14.0, '58': 46.0, '59': 40.0, '60': 35.0, '61': 33.0, '62': 19.0, '63': 60.0, '64': 36.0}, 'ShootingAngle': {'0': 11.0, '1': 14.0, '2': -56.0, '3': -48.0, '4': 18.0, '5': -61.0, '6': -60.0, '7': -84.0, '8': 63.0, '9': 65.0, '10': -47.0, '11': -58.0, '12': -38.0, '13': -77.0, '14': 79.0, '15': -69.0, '16': -85.0, '17': 84.0, '18': 83.0, '19': 0.0, '20': -76.0, '21': -61.0, '22': 27.0, '23': -61.0, '24': 57.0, '25': 47.0, '26': 31.0, '27': -55.0, '28': 85.0, '29': -44.0, '30': 65.0, '31': -42.0, '32': -75.0, '33': -88.0, '34': -39.0, '35': -74.0, '36': -34.0, '37': 58.0, '38': -50.0, '39': -52.0, '40': 46.0, '41': -58.0, '42': 13.0, '43': 71.0, '44': 72.0, '45': 47.0, '46': -43.0, '47': -11.0, '48': -70.0, '49': 58.0, '50': -69.0, '51': -61.0, '52': -54.0, '53': 23.0, '54': 49.0, '55': 42.0, '56': 73.0, '57': 34.0, '58': -49.0, '59': 40.0, '60': -46.0, '61': -44.0, '62': 6.0, '63': 79.0, '64': -52.0}, 'Team': {'0': 'Canadiens', '1': 'Canadiens', '2': 'Capitals', '3': 'Capitals', '4': 'Capitals', '5': 'Canadiens', '6': 'Capitals', '7': 'Capitals', '8': 'Canadiens', '9': 'Canadiens', '10': 'Canadiens', '11': 'Capitals', '12': 'Capitals', '13': 'Capitals', '14': 'Capitals', '15': 'Capitals', '16': 'Capitals', '17': 'Capitals', '18': 'Capitals', '19': 'Capitals', '20': 'Capitals', '21': 'Canadiens', '22': 'Canadiens', '23': 'Canadiens', '24': 'Canadiens', '25': 'Canadiens', '26': 'Capitals', '27': 'Capitals', '28': 'Capitals', '29': 'Canadiens', '30': 'Capitals', '31': 'Canadiens', '32': 'Capitals', '33': 'Canadiens', '34': 'Canadiens', '35': 'Capitals', '36': 'Capitals', '37': 'Canadiens', '38': 'Capitals', '39': 'Capitals', '40': 'Capitals', '41': 'Canadiens', '42': 'Canadiens', '43': 'Canadiens', '44': 'Capitals', '45': 'Canadiens', '46': 'Canadiens', '47': 'Canadiens', '48': 'Capitals', '49': 'Canadiens', '50': 'Capitals', '51': 'Capitals', '52': 'Canadiens', '53': 'Capitals', '54': 'Capitals', '55': 'Capitals', '56': 'Capitals', '57': 'Capitals', '58': 'Canadiens', '59': 'Canadiens', '60': 'Canadiens', '61': 'Canadiens', '62': 'Canadiens', '63': 'Canadiens', '64': 'Canadiens'}}
+ERROR:app:Exception on /predict [POST]
+Traceback (most recent call last):
+  File "/Users/miloshdevic/opt/miniconda3/lib/python3.9/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/miloshdevic/opt/miniconda3/lib/python3.9/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/miloshdevic/opt/miniconda3/lib/python3.9/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/miloshdevic/opt/miniconda3/lib/python3.9/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/Users/miloshdevic/Documents/MILA/Science_des_données/Project/NHL_analytics/serving/app.py", line 159, in predict
+    predictions = pd.Series(model.predict_proba(X)[:, 1])
+AttributeError: 'NoneType' object has no attribute 'predict_proba'
+INFO:app:{'workspace': 'nhl-analytics-milestone-2', 'model': 'logisticregressiondistancetogoal', 'version': '1.1.0'}
+INFO:app:None
+INFO:app:LogisticRegressionDistanceToGoal.pkl
+INFO:app:
+Model present!
+
+INFO:app:
+LogisticRegression(random_state=42) has been downloaded successfully!
+
+INFO:app:{'DistanceToGoal': {'0': 5.0, '1': 4.0, '2': 58.0, '3': 12.0, '4': 6.0, '5': 33.0, '6': 60.0, '7': 10.0, '8': 57.0, '9': 86.0, '10': 18.0, '11': 38.0, '12': 23.0, '13': 58.0, '14': 61.0, '15': 9.0, '16': 12.0, '17': 9.0, '18': 8.0, '19': 13.0, '20': 21.0, '21': 53.0, '22': 7.0, '23': 48.0, '24': 53.0, '25': 33.0, '26': 42.0, '27': 35.0, '28': 48.0, '29': 29.0, '30': 23.0, '31': 15.0, '32': 28.0, '33': 32.0, '34': 6.0, '35': 63.0, '36': 7.0, '37': 19.0, '38': 16.0, '39': 33.0, '40': 39.0, '41': 15.0, '42': 26.0, '43': 82.0, '44': 9.0, '45': 51.0, '46': 40.0, '47': 16.0, '48': 20.0, '49': 34.0, '50': 95.0, '51': 35.0, '52': 9.0, '53': 13.0, '54': 62.0, '55': 13.0, '56': 10.0, '57': 14.0, '58': 46.0, '59': 40.0, '60': 35.0, '61': 33.0, '62': 19.0, '63': 60.0, '64': 36.0}, 'ShootingAngle': {'0': 11.0, '1': 14.0, '2': -56.0, '3': -48.0, '4': 18.0, '5': -61.0, '6': -60.0, '7': -84.0, '8': 63.0, '9': 65.0, '10': -47.0, '11': -58.0, '12': -38.0, '13': -77.0, '14': 79.0, '15': -69.0, '16': -85.0, '17': 84.0, '18': 83.0, '19': 0.0, '20': -76.0, '21': -61.0, '22': 27.0, '23': -61.0, '24': 57.0, '25': 47.0, '26': 31.0, '27': -55.0, '28': 85.0, '29': -44.0, '30': 65.0, '31': -42.0, '32': -75.0, '33': -88.0, '34': -39.0, '35': -74.0, '36': -34.0, '37': 58.0, '38': -50.0, '39': -52.0, '40': 46.0, '41': -58.0, '42': 13.0, '43': 71.0, '44': 72.0, '45': 47.0, '46': -43.0, '47': -11.0, '48': -70.0, '49': 58.0, '50': -69.0, '51': -61.0, '52': -54.0, '53': 23.0, '54': 49.0, '55': 42.0, '56': 73.0, '57': 34.0, '58': -49.0, '59': 40.0, '60': -46.0, '61': -44.0, '62': 6.0, '63': 79.0, '64': -52.0}, 'Team': {'0': 'Canadiens', '1': 'Canadiens', '2': 'Capitals', '3': 'Capitals', '4': 'Capitals', '5': 'Canadiens', '6': 'Capitals', '7': 'Capitals', '8': 'Canadiens', '9': 'Canadiens', '10': 'Canadiens', '11': 'Capitals', '12': 'Capitals', '13': 'Capitals', '14': 'Capitals', '15': 'Capitals', '16': 'Capitals', '17': 'Capitals', '18': 'Capitals', '19': 'Capitals', '20': 'Capitals', '21': 'Canadiens', '22': 'Canadiens', '23': 'Canadiens', '24': 'Canadiens', '25': 'Canadiens', '26': 'Capitals', '27': 'Capitals', '28': 'Capitals', '29': 'Canadiens', '30': 'Capitals', '31': 'Canadiens', '32': 'Capitals', '33': 'Canadiens', '34': 'Canadiens', '35': 'Capitals', '36': 'Capitals', '37': 'Canadiens', '38': 'Capitals', '39': 'Capitals', '40': 'Capitals', '41': 'Canadiens', '42': 'Canadiens', '43': 'Canadiens', '44': 'Capitals', '45': 'Canadiens', '46': 'Canadiens', '47': 'Canadiens', '48': 'Capitals', '49': 'Canadiens', '50': 'Capitals', '51': 'Capitals', '52': 'Canadiens', '53': 'Capitals', '54': 'Capitals', '55': 'Capitals', '56': 'Capitals', '57': 'Capitals', '58': 'Canadiens', '59': 'Canadiens', '60': 'Canadiens', '61': 'Canadiens', '62': 'Canadiens', '63': 'Canadiens', '64': 'Canadiens'}}
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+WARNING:urllib3.connectionpool:Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff4b9f0b3a0>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known')': /clientlib/isAlive/ver
+WARNING:urllib3.connectionpool:Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff4b9f0b0a0>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known')': /clientlib/isAlive/ver
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+WARNING:urllib3.connectionpool:Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ReadTimeoutError("HTTPSConnectionPool(host='www.comet.com', port=443): Read timed out. (read timeout=10)")': /clientlib/isAlive/ver
+WARNING:urllib3.connectionpool:Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff4b9f2f3a0>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known')': /clientlib/isAlive/ver
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+WARNING:urllib3.connectionpool:Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff4b97ef3a0>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known')': /clientlib/isAlive/ver
+WARNING:urllib3.connectionpool:Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff4b97ef0a0>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known')': /clientlib/isAlive/ver
+WARNING:urllib3.connectionpool:Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff4b97efc40>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known')': /clientlib/isAlive/ver
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+WARNING:urllib3.connectionpool:Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff4b9f2f3a0>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known')': /clientlib/isAlive/ver
+WARNING:urllib3.connectionpool:Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff4b9f2f0a0>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known')': /clientlib/isAlive/ver
+INFO:app:
+Default model downloaded from Comet!
+
+WARNING:urllib3.connectionpool:Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff4b9f2f3a0>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known')': /clientlib/isAlive/ver
+WARNING:urllib3.connectionpool:Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff4b9f2f0a0>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known')': /clientlib/isAlive/ver
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+WARNING:urllib3.connectionpool:Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff4b9eef3a0>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known')': /clientlib/isAlive/ver
+WARNING:urllib3.connectionpool:Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7ff4b9eef0a0>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known')': /clientlib/isAlive/ver
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
+INFO:app:
+Default model downloaded from Comet!
+
