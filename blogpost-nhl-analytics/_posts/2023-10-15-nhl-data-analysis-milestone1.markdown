@@ -28,7 +28,7 @@ Before you start, make sure you have the following:
 
 Start by importing the necessary libraries and creating a class that will help us download the data. In the provided code, the ‘NHLDataDownloader’ class handles the data download process.
 
-{% include _include/image_full.html imageurl="/images/milestone1/download_step1.png" caption="setting up the environment" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/download_step1.png" caption="setting up the environment" %}
 
 ### Step 2: Create an Instance of the Downloader
 
@@ -36,7 +36,7 @@ Now, create an instance of the ‘NHLDataDownloader’ class. All you need to do
 
 Here is an example:
 
-{% include _include/image_full.html imageurl="/images/milestone1/download_step2.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/download_step2.png" %}
 
 ### Step 3: Download the Data
 
@@ -48,7 +48,7 @@ The downloader will ensure that it skips games that didn’t take place, such as
 
 **Note**: Downloading the data may take a while so keep that in mind. However, we have coded these methods to allow you to download the data in several shots. If you cannot wait for the dataset to be downloaded completely all at once, you can stop the process at any time and continue later (with the same inputs as before) and it will continue downloading the data where it stopped!
 
-{% include _include/image_full.html imageurl="/images/milestone1/download_step3.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/download_step3.png" %}
 
 ### Conclusion
 You now have the guide to download the NHL play-by-play data using the provided Python code. Simply replace the starting and ending years as well as the data directory with your preferences and you are good to go! Good Luck!
@@ -66,13 +66,13 @@ season and playoffs. WIth the inputs (game ID and event ID) entered by the user,
 As you can see in our example, after the user inputs (game ID and event ID) are provided, the game information between OTT and TOR is printed, and the location of the event is shown on the figure, the title of the figure tells us “Mark Stone blocked shot from Jake Gardiner at 01:10 period 1”. Then the event details are printed below. And the user could change the inputs to retrieve the information of any game and event we have.
 
 
-{% include _include/image_full.html imageurl="/images/milestone1/debug.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/debug.png" %}
 
 ## 4. Tidy Data
 
 ### Question 1
 
-{% include _include/image_full.html imageurl="/images/milestone1/tidy.png" caption="head of tidied dataframe" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/tidy.png" caption="head of tidied dataframe" %}
 
 
 ### Question 2
@@ -110,7 +110,7 @@ The wrist shot appears to be the most dangerous shot as it is the shot that cont
 
 We chose to plot a stacked bar graph because we believe it is the best way to visualize which shot is the most common as well as most dangerous. It provides a clear and visually compelling way to compare these shot types. By looking at the graph, we can know right away the number of goals and shots taken for each shot type and we can compare it with the other shot types quickly since they are all represented in the same graph. By doing such, we can identify patterns and trends in player behavior which enables us to draw conclusions on how effective and common a shot is.
 
-{% include _include/image_full.html imageurl="/images/milestone1/shot_types_2016-17.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/shot_types_2016-17.png" %}
 
 ### Question 2: Figure Analysis: Shot Distance vs Goal Probability
 
@@ -118,14 +118,14 @@ In our analysis of the distance from which a shot is taken and the probability i
 
 We have noticed that the shots taken from a distance of 0 feet to about 40 feet from the net had the highest probability of scoring. We see that the further the shot is taken, the smaller the chance is for a goal to be scored. There is however a small but noticeable spike for the bigger distances (75 feet and more) which can be explained. These shots from very far distances (often from the side of the rink players defend) are usually taken when the opposing team remove their goaltender and leave their net empty to have an extra player in offense in the hopes of scoring a goal to bring the score to a draw.
 
-{% include _include/image_full.html imageurl="/images/milestone1/shot_goal_ratio_vs_distance_2018-19.png" %}
-{% include _include/image_full.html imageurl="/images/milestone1/shot_goal_ratio_vs_distance_2019-20.png" %}
-{% include _include/image_full.html imageurl="/images/milestone1/shot_goal_ratio_vs_distance_2020-21.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/shot_goal_ratio_vs_distance_2018-19.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/shot_goal_ratio_vs_distance_2019-20.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/shot_goal_ratio_vs_distance_2020-21.png" %}
 
 
 But what is noteworthy about these line plots is their striking similarity across the three seasons (it can be very well seen in the last graph). This led us to the following key takeaway from these line plots, which is the remarkable consistency in the relationship between the shot distance and the goal-scoring probability. Despite all the external factors, varying strategies over the seasons, player rosters changing very often, the data suggests that the shot distance is still a very important factor in the prediction of a shot being converted to a goal.
 
-{% include _include/image_full.html imageurl="/images/milestone1/shot_goal_ratio_vs_distance_combined.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/shot_goal_ratio_vs_distance_combined.png" %}
 
 
 We chose this type of figure because these plots allow us to analyze the probability of a goal as shots are taken from different distances. By examining multiple seasons, we can identify trends and assess whether there have been significant changes in goal-scoring patterns according to the distance over the past three seasons which enabled us to draw the conclusion we presented.
@@ -140,7 +140,7 @@ By looking at our heatmap, we can say that the deflected shot might be one of th
 It is worth noting that for all the shot types, the closer they are to the net, the higher their percentage of being converted to a goal is.
 
 
-{% include _include/image_full.html imageurl="/images/milestone1/heatmap_goal_percentage_2016-17.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/heatmap_goal_percentage_2016-17.png" %}
 
 
 
@@ -186,7 +186,7 @@ They exceed the league’s average only in 3 areas of the offensive zone:
 All 3 of these areas either have not much of a good angle for a shot, or are pretty far from the net. We have shown in our analysis in the previous section that the further the shots are from the goal, the smaller their chances of scoring is. We can say that the team overall didn’t shoot enough towards the net which led to less scoring chances therefore less goals so in the end less wins. This can explain why they finished last that season (21 points behind the second worst team).
 
 
-{% include _include/image_full.html imageurl="/images/milestone1/colorado_avalanche_sm_2016-17.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/colorado_avalanche_sm_2016-17.png" %}
 
 
 In the 2020-2021 season, the Colorado Avalanche have been shooting much more than all the other teams. They had a much higher shot average than the other teams in almost every section of the offensive zone which would also mean they shot more often than the others. Shooting more often and closer creates more quality scoring opportunities, therefore more goals. They finished 1st overall that season.
@@ -194,7 +194,7 @@ In the 2020-2021 season, the Colorado Avalanche have been shooting much more tha
 We can conclude that the amount of shots and the location of the shots are a big contributing factor that will inevitably help you or not in scoring more goals and winning more games as we can see with the case of the Colorado Avalanche. This does indeed make sense. As Wayne Gretzky, the greatest hockey player on the planet, once said: “You miss 100% of the shots you don’t take”. To score more goals, one must shoot more often.
 
 
-{% include _include/image_full.html imageurl="/images/milestone1/colorado_avalanche_sm_2020-21.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/colorado_avalanche_sm_2020-21.png" %}
 
 
 
@@ -202,18 +202,18 @@ We can conclude that the amount of shots and the location of the shots are a big
 
 We can see for the Tampa Bay Lightning that in all 3 seasons, they have been dominating the league in terms of shots taken in the middle of the offensive zone. This shows they’re capable of controlling the offensive play and setting up their attack properly in order to shoot from the most dangerous areas of the ice. This obviously contributed to their success in recent years. 
 
-{% include _include/image_full.html imageurl="/images/milestone1/tampabay_lightning_sm_2018-19.png" %}
-{% include _include/image_full.html imageurl="/images/milestone1/tampabay_lightning_sm_2019-20.png" %}
-{% include _include/image_full.html imageurl="/images/milestone1/tampabay_lightning_sm_2020-21.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/tampabay_lightning_sm_2018-19.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/tampabay_lightning_sm_2019-20.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/tampabay_lightning_sm_2020-21.png" %}
 
 
 On the other hand, we can see that the Buffalo Sabres have been struggling to shoot in the same mentioned areas, falling way behind the league average. They have been however taking more shots on the extremities of the offensive zone. This shows that the opposing team’s defense was able to push off their attack and not allow them to get in the slot and have better scoring opportunities (which resulted in them taking more shots on the outside which has less angle, more distance and more traffic therefore less chance of being a goal).
 
 
 
-{% include _include/image_full.html imageurl="/images/milestone1/buffalo_sabres_sm_2018-19.png" %}
-{% include _include/image_full.html imageurl="/images/milestone1/buffalo_sabres_sm_2019-20.png" %}
-{% include _include/image_full.html imageurl="/images/milestone1/buffalo_sabres_sm_2020-21.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/buffalo_sabres_sm_2018-19.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/buffalo_sabres_sm_2019-20.png" %}
+{% include _includes/image_full.html imageurl="/images/milestone1/buffalo_sabres_sm_2020-21.png" %}
 
 
 These graphs obviously don’t paint a complete picture because many other aspects need to be considered when trying to explain a team’s success or struggle, one of them being the amount of shots allowed compared to the league’s average (indeed, scoring many goals doesn’t mean much if on the other end they concede goals as easily). However, this still gives us a good picture of how well the offense performs.
